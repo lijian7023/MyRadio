@@ -1,8 +1,10 @@
-package net.lzzy.myradio;
+package net.lzzy.myradio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import net.lzzy.myradio.R;
 
 public class MainActivity extends AppCompatActivity {
 
