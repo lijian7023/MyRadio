@@ -42,13 +42,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AppUtils.removeActivity(this);
+        AppUtils.remoreActivity(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        AppUtils.setRunning(getLocalClassName());
+        AppUtils.setRunningActivity(getLocalClassName());
     }
 
     @Override
