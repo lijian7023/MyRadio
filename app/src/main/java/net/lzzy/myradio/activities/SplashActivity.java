@@ -2,10 +2,12 @@ package net.lzzy.myradio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 
+import android.os.Parcelable;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -23,6 +25,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,6 +36,9 @@ public class SplashActivity extends AppCompatActivity {
     public static final int WHAT_EXCEPTION = 1;
     public static final int WHAT_COUNT_DONE= 2;
     public static final int WHAT_GET_QUOTE_OK=3;
+    public static final String REGIONS = "regions";
+    public static final String RADIO_CATEGORIES = "radioCategories";
+    public static final String THIS_REGION = "thisRegion";
 
     private TextView time;
     private TextView hint;
@@ -40,6 +47,7 @@ public class SplashActivity extends AppCompatActivity {
     private Message message;
     private  List<Region> regions=new ArrayList<>();
     private List<RadioCategory> radioCategories=new ArrayList<>();
+    private String thisRenion="";
 
     private static class SplashHandler extends AbstractStaticHandler<SplashActivity> {
         public SplashHandler(SplashActivity context) {
@@ -54,6 +62,9 @@ public class SplashActivity extends AppCompatActivity {
                     activity.time.setText(display);
                     break;
                 case WHAT_COUNT_DONE:
+                        activity.gotoMain();
+
+
                     break;
                 case WHAT_GET_QUOTE_OK:
                     String quoteJSON = msg.obj.toString();
@@ -67,7 +78,19 @@ public class SplashActivity extends AppCompatActivity {
                     break;
             }
         }
+
     }
+    public void gotoMain() {
+        Intent intent=new Intent(this,MainActivity.class);
+        intent.putParcelableArrayListExtra(REGIONS, (ArrayList<? extends Parcelable>) regions);
+        intent.putParcelableArrayListExtra(RADIO_CATEGORIES, (ArrayList<? extends Parcelable>) radioCategories);
+        intent.putExtra(THIS_REGION,thisRenion);
+        startActivity(intent);
+        finish();
+    }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +106,8 @@ public class SplashActivity extends AppCompatActivity {
         new GetRegion(this).execute();
         //执行获取所有电台类别线程
         new GetRadioCategory(this).execute();
+        //执行获取所在地区线程
+        new GetLocation(this).execute();
     }
 
     /**
@@ -196,4 +221,30 @@ public class SplashActivity extends AppCompatActivity {
             activity.get().radioCategories.addAll(radioCategoryList);
         }
     }
-}
+
+    /**
+     * 获取所在地区线程
+     */
+    static class GetLocation extends AsyncTask<Void,Void,String>{
+        WeakReference<SplashActivity> activity;
+        GetLocation(SplashActivity activity){
+            this.activity=new WeakReference<>(activity);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                return AnalysisJsonService.getLocation(ApiConstants.GET_THIS_REGION);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            activity.get().thisRenion=s;
+        }
+    }}
+
