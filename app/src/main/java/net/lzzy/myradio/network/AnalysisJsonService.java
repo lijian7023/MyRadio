@@ -1,5 +1,6 @@
 package net.lzzy.myradio.network;
 
+import net.lzzy.myradio.models.Location;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
 import net.lzzy.sqllib.JsonConverter;
@@ -23,5 +24,12 @@ public class AnalysisJsonService {
         JsonConverter<RadioCategory> converter=new JsonConverter<>(RadioCategory.class);
         JSONObject jsonObject=new JSONObject(json);
         return converter.getArray(jsonObject.getString("Data"));
+    }
+    public static String getLocation(String address) throws IOException, JSONException, InstantiationException, IllegalAccessException {
+        String json = ApiService.okGet(address);
+        JsonConverter<Location> converter = new JsonConverter<>(Location.class);
+        Location location=converter.getSingle(json,"data");
+        return location.getRegion();
+
     }
 }
