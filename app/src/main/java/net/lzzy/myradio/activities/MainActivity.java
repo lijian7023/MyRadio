@@ -9,21 +9,24 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.lzzy.myradio.R;
+import net.lzzy.myradio.fragments.ChartFragment;
+import net.lzzy.myradio.fragments.FindFragment;
+import net.lzzy.myradio.fragments.LocalFragment;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
+import net.lzzy.myradio.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements  LocalFragment.OnFragmentInteractionListener,
-        FindFragment.OnFragmentInteractionListener,
-        ChartFragment.OnFragmentInteractionListener, View.OnClickListener {
+        FindFragment.OnFragmentInteractionListener, View.OnClickListener {
     private int[] tabIds = {R.id.tab1,R.id.tab2,R.id.tab3};
     private List<Fragment> fragments;
     private ImageButton img1;
@@ -42,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        AppUtils.addActivity(this);
          thisRenion=getIntent().getStringExtra(SplashActivity.THIS_REGION);
         regions=getIntent().getParcelableArrayListExtra(SplashActivity.REGIONS);
         radioCategories=getIntent().getParcelableArrayListExtra(SplashActivity.RADIO_CATEGORIES);

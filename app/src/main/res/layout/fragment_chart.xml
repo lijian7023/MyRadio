@@ -3,12 +3,107 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ChartFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context=".fragments.ChartFragment">
+    <LinearLayout android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:background="#EBE77C4B"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/fragment_chart_tv_title"
+                android:gravity="center"
+                android:text="oooooooo"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <RadioGroup
+                android:id="@+id/fragment_chart_rg"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/fragment_chart_rb_today"
+                    android:checked="true"
+                    android:text="当天"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/fragment_chart_rb_week"
+                    android:text="过去一周"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/fragment_chart_rb_month"
+                    android:text="过去一月"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RadioGroup>
+        </LinearLayout>
+        <FrameLayout android:id="@+id/fragment_chart_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/fragment_chart_pie"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/fragment_chart_line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/fragment_chart_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/fragment_chart_dot1"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/dot_fill_style"/>
+                <TextView android:id="@+id/fragment_chart_dot2"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/dot_style"/>
+                <TextView android:id="@+id/fragment_chart_dot3"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/dot_style"/>
+                <TextView android:id="@+id/fragment_chart_dot4"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/dot_style"/>
+                <TextView android:id="@+id/fragment_chart_dot5"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/dot_style"/>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/fragment_chart_iv"
+                android:src="@drawable/radio_icon"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="20dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+        </FrameLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -15,27 +15,29 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
+import net.lzzy.myradio.models.UserCookies;
 import net.lzzy.myradio.network.AnalysisJsonService;
 import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
 import net.lzzy.myradio.utils.AppUtils;
-import net.lzzy.myradio.utils.JsonUtil;
+import net.lzzy.myradio.utils.DateTimeUtils;
+import net.lzzy.myradio.utils.JsonUtils;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class SplashActivity extends AppCompatActivity {
     public static final int WHAT_COUNTING = 0;
     public static final int WHAT_EXCEPTION = 1;
-    public static final int WHAT_COUNT_DONE= 2;
-    public static final int WHAT_GET_QUOTE_OK=3;
+    public static final int WHAT_COUNT_DONE = 2;
+    public static final int WHAT_GET_QUOTE_OK = 3;
     public static final String REGIONS = "regions";
     public static final String RADIO_CATEGORIES = "radioCategories";
     public static final String THIS_REGION = "thisRegion";
@@ -45,9 +47,9 @@ public class SplashActivity extends AppCompatActivity {
     private int seconds = 3;
     private SplashHandler handler = new SplashHandler(this);
     private Message message;
-    private  List<Region> regions=new ArrayList<>();
-    private List<RadioCategory> radioCategories=new ArrayList<>();
-    private String thisRenion="";
+    private List<Region> regions = new ArrayList<>();
+    private List<RadioCategory> radioCategories = new ArrayList<>();
+    private String thisRenion = "";
 
     private static class SplashHandler extends AbstractStaticHandler<SplashActivity> {
         public SplashHandler(SplashActivity context) {
@@ -56,20 +58,20 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void handleMessage(Message msg, SplashActivity activity) {
-            switch (msg.what){
+            switch (msg.what) {
                 case WHAT_COUNTING:
                     String display = msg.obj.toString() + "秒";
                     activity.time.setText(display);
                     break;
                 case WHAT_COUNT_DONE:
-                        activity.gotoMain();
+                    activity.gotoMain();
 
 
                     break;
                 case WHAT_GET_QUOTE_OK:
                     String quoteJSON = msg.obj.toString();
                     try {
-                        activity.hint.setText(JsonUtil.getQuote(quoteJSON));
+                        activity.hint.setText(JsonUtils.getQuote(quoteJSON));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -80,16 +82,15 @@ public class SplashActivity extends AppCompatActivity {
         }
 
     }
+
     public void gotoMain() {
-        Intent intent=new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putParcelableArrayListExtra(REGIONS, (ArrayList<? extends Parcelable>) regions);
         intent.putParcelableArrayListExtra(RADIO_CATEGORIES, (ArrayList<? extends Parcelable>) radioCategories);
-        intent.putExtra(THIS_REGION,thisRenion);
+        intent.putExtra(THIS_REGION, thisRenion);
         startActivity(intent);
         finish();
     }
-
-
 
 
     @Override
@@ -97,6 +98,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+        AppUtils.addActivity(this);
         initView();
         ThreadPoolExecutor executor = AppUtils.getExecutor();
         executor.execute(this::countDown);
@@ -126,17 +128,18 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void countDown() {
-        while (seconds >= 0 ){
-            handler.sendMessage(handler.obtainMessage(WHAT_COUNTING,seconds));
+        while (seconds >= 0) {
+            handler.sendMessage(handler.obtainMessage(WHAT_COUNTING, seconds));
             try {
                 Thread.sleep(1000);
-            }catch (InterruptedException e){
-                handler.sendMessage(handler.obtainMessage(WHAT_EXCEPTION,e.getMessage()));
+            } catch (InterruptedException e) {
+                handler.sendMessage(handler.obtainMessage(WHAT_EXCEPTION, e.getMessage()));
             }
             seconds--;
         }
         handler.sendEmptyMessage(WHAT_COUNT_DONE);
     }
+
     private void initView() {
         time = findViewById(R.id.activity_start_tv_time);
         hint = findViewById(R.id.activity_start_tv_hint);
@@ -144,10 +147,10 @@ public class SplashActivity extends AppCompatActivity {
 
     /**
      * 获取所有地区线程
-     *  AsyncTask<Void, Void, List<Region>>
-     *      1：入参；
-     *      2：入参；
-     *      3：返回的参数
+     * AsyncTask<Void, Void, List<Region>>
+     * 1：入参；
+     * 2：入参；
+     * 3：返回的参数
      */
     static class GetRegion extends AsyncTask<Void, Void, List<Region>> {
         WeakReference<SplashActivity> activity;
@@ -167,6 +170,7 @@ public class SplashActivity extends AppCompatActivity {
 
         /**
          * 执行时
+         *
          * @param voids
          * @return
          */
@@ -182,12 +186,13 @@ public class SplashActivity extends AppCompatActivity {
 
         /**
          * 获取到数据后
+         *
          * @param regionList 获取到的数据
          */
         @Override
         protected void onPostExecute(List<Region> regionList) {
             super.onPostExecute(regionList);
-            activity.get().regions .clear();
+            activity.get().regions.clear();
             activity.get().regions.addAll(regionList);
         }
     }
@@ -195,12 +200,13 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * 获取所有电台类别线程
      */
-    static class GetRadioCategory extends AsyncTask<Void,Void,List<RadioCategory>> {
+    static class GetRadioCategory extends AsyncTask<Void, Void, List<RadioCategory>> {
         WeakReference<SplashActivity> activity;
 
         GetRadioCategory(SplashActivity activity) {
             this.activity = new WeakReference<>(activity);
         }
+
         @Override
         protected List<RadioCategory> doInBackground(Void... voids) {
             try {
@@ -210,14 +216,16 @@ public class SplashActivity extends AppCompatActivity {
                 return new ArrayList<>();
             }
         }
+
         /**
          * 获取到数据后
+         *
          * @param radioCategoryList 获取到的数据
          */
         @Override
         protected void onPostExecute(List<RadioCategory> radioCategoryList) {
             super.onPostExecute(radioCategoryList);
-            activity.get().radioCategories .clear();
+            activity.get().radioCategories.clear();
             activity.get().radioCategories.addAll(radioCategoryList);
         }
     }
@@ -225,10 +233,11 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * 获取所在地区线程
      */
-    static class GetLocation extends AsyncTask<Void,Void,String>{
+    static class GetLocation extends AsyncTask<Void, Void, String> {
         WeakReference<SplashActivity> activity;
-        GetLocation(SplashActivity activity){
-            this.activity=new WeakReference<>(activity);
+
+        GetLocation(SplashActivity activity) {
+            this.activity = new WeakReference<>(activity);
         }
 
         @Override
@@ -244,7 +253,15 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            activity.get().thisRenion=s;
+            activity.get().thisRenion = s;
         }
-    }}
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        UserCookies.getInstance().UpdateAppVisitCount(1,
+                DateTimeUtils.DATE_FORMAT.format(new Date()));
+    }
+}
 
