@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="220dp"
+    android:layout_height="260dp">
+
+    <ImageView
+        android:id="@+id/radio_icon_img"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:background="@drawable/tp" />
+    <TextView
+        android:id="@+id/radio_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="#1A1A1A"
+        android:text="广西交通广播"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/people"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
+        <TextView android:id="@+id/radio_listen_tv"
+            android:layout_gravity="center_vertical"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="收听：236525665" />
+
+        <ImageView
+            android:background="@drawable/collect"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
