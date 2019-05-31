@@ -28,11 +28,13 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_local_pressed"
                 android:background="#00000000"/>
-            <TextView android:id="@+id/tv1"
+
+            <TextView
+                android:id="@+id/tv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:text="电台"/>
+                android:text="收藏"
+                android:textColor="@android:color/white" />
         </LinearLayout>
         <LinearLayout android:id="@+id/tab2"
             android:orientation="vertical"
