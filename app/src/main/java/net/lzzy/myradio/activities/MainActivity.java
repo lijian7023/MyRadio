@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
         initViews();
         fragments = new ArrayList<>();
         fragments.add(new LocalFragment());
-        fragments.add(new FindFragment());
+        fragments.add(FindFragment.newInstance(regions,radioCategories,thisRenion));
         fragments.add(new ChartFragment());
         pager = findViewById(R.id.pager);
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {

@@ -2,6 +2,8 @@ package net.lzzy.myradio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class SplashActivity extends AppCompatActivity {
@@ -275,5 +278,6 @@ public class SplashActivity extends AppCompatActivity {
         UserCookies.getInstance().UpdateAppVisitCount(1,
                 DateTimeUtils.DATE_FORMAT.format(new Date()));
     }
+
 }
 

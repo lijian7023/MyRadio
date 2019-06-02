@@ -4,12 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.LocalFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <include layout="@layout/radio_collect"/>
-    <TextView
+    <GridView android:id="@+id/fragment_local_gv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="" />
+        android:layout_margin="10dp"
+        android:numColumns="3">
+    </GridView>
+
+    <include
+        android:id="@+id/fragment_local_empty"
+        layout="@layout/fragment_local_empty"/>
 
 </FrameLayout>
