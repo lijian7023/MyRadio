@@ -41,6 +41,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final String REGIONS = "regions";
     public static final String RADIO_CATEGORIES = "radioCategories";
     public static final String THIS_REGION = "thisRegion";
+    public static final int WHAT_GET_LOCA_OK = 10;
 
     private TextView time;
     private TextView hint;
@@ -103,6 +104,7 @@ public class SplashActivity extends AppCompatActivity {
         ThreadPoolExecutor executor = AppUtils.getExecutor();
         executor.execute(this::countDown);
         executor.execute(this::getQuoteDown);
+        executor.execute(this::getLocation);
 
         //执行获取所有的地区线程
         new GetRegion(this).execute();
@@ -125,6 +127,16 @@ public class SplashActivity extends AppCompatActivity {
             handler.sendEmptyMessage(5);
         }
 
+    }
+
+    private void getLocation(){
+        try {
+            String json=ApiService.okGet(ApiConstants.GET_REGION);
+            Message message=handler.obtainMessage(WHAT_GET_LOCA_OK);
+            handler.sendMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void countDown() {

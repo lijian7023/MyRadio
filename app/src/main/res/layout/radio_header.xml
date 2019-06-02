@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="请输入搜索内容"
+            />
+        <ImageView
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/dw" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:text="广西"
+            android:textColor="@color/colorAccent"
+            android:textSize="30dp"/>
+        <ImageView android:id="@+id/location_choice_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/xl"/>
+    </LinearLayout>
+    <GridView android:id="@+id/radio_cover_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:numColumns="3">
+</GridView>
+</LinearLayout>
