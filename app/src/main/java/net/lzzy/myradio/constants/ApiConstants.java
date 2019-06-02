@@ -24,6 +24,11 @@ public class ApiConstants {
      * 获取当前的所在地区
      */
     public static final String GET_THIS_REGION="https://ip.qingting.fm/ip";
+    public static final String JSON_RADIO_CONTENT_ID = "content_id";
+    public static final String JSON_RADIO_CONTENT_TYPE = "content_type";
+    public static final String JSON_RADIO_COVER = "cover";
+    public static final String JSON_RADIO_TITLE = "title";
+    public static final String JSON_RADIO_DESCRIPTION = "description";
 
 
     /**
@@ -35,5 +40,6 @@ public class ApiConstants {
     public static String getRadio(int regionId,int page,int pagesize){
         return GET_RADIO_A+regionId+GET_RADIO_B+page+GET_RADIO_C+pagesize;
     }
+
 
 }

@@ -34,5 +34,7 @@ dependencies {
     implementation project(path: ':sqllib')
     implementation("com.squareup.okhttp3:okhttp:3.14.1")
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 
 }
