@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.SplashActivity;
 import net.lzzy.myradio.constants.ApiConstants;
+import net.lzzy.myradio.models.FavoriteFactory;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
@@ -59,6 +60,8 @@ public class FindFragment extends BaseFragment {
     private List<Radio> radios=new ArrayList<>();
     private static final int WHAT_GET_RADIO_OK = 1;
     private static final int WHAT_GET_RADIO_ERROR = 2;
+    private Radio radio;
+    private ImageView imageView;
 
     public static FindFragment newInstance(List<Region> regions,List<RadioCategory> radioCategories,
                                            String thisRegion){
@@ -83,6 +86,9 @@ public class FindFragment extends BaseFragment {
     protected void populate() {
         TextView tvRegion=find(R.id.fragment_find_tv);
         GridView gv=find(R.id.fragment_find_gv);
+
+
+
         View empty=find(R.id.no_network);
         gv.setEmptyView(empty);
         //设置默认地区
@@ -141,6 +147,29 @@ public class FindFragment extends BaseFragment {
                 viewHolder.setTextView(R.id.radio_name_tv_title, radio.getTitle());
                 long count = radio.getAudienceCount();
                 viewHolder.setTextView(R.id.radio_listen_tv, "收听：" + count);
+                ImageView imageFavorite = viewHolder.getView(R.id.fragment_icon_collect);
+               //设置收藏
+                int starId = FavoriteFactory.getInstance().isRadioStarred(String.valueOf(radio.getContentId()))?
+                        android.R.drawable.star_big_on :android.R.drawable.star_big_off;
+                imageFavorite.setImageResource(starId);
+                imageFavorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean collect = FavoriteFactory.getInstance().isRadioStarred(String.valueOf(radio));
+                        if (collect) {
+                            FavoriteFactory.getInstance().cancelStarRadio(radio.getContentId());
+                            imageFavorite.setImageResource(android.R.drawable.star_off);
+                        } else {
+                            FavoriteFactory.getInstance().starRadio(radio.getContentId(),radio.getTitle(),radio.getAudienceCount(),radio.getCover());
+                            imageFavorite.setImageResource(android.R.drawable.star_on);
+                        }}
+                });
+                FavoriteFactory favoriteFactory = FavoriteFactory.getInstance();
+                if (favoriteFactory.isRadioStarred(String.valueOf(radio.getContentId()))){
+                    imageFavorite.setBackgroundResource(android.R.drawable.star_on);
+                } else {
+                    imageFavorite.setBackgroundResource(android.R.drawable.star_off);
+                }
             }
 
             @Override

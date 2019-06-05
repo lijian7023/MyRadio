@@ -18,6 +18,9 @@
         android:textSize="20sp"
         android:layout_gravity="center"
         android:textColor="#1A1A1A"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:maxEms="5"
         android:text="广西交通广播"/>
 
     <LinearLayout
@@ -40,7 +43,7 @@
 
         <ImageView
             android:id="@+id/fragment_icon_collect"
-            android:background="@drawable/collect"
+            android:background="@drawable/off_favorite"
             android:layout_width="30dp"
             android:layout_height="30dp" />
 
