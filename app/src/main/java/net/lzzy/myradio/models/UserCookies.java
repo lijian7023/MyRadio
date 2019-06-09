@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import net.lzzy.myradio.utils.AppUtils;
 
 public class UserCookies {
+
     private static final String REFRESH_SP_APP_VISIT_COUNT = "refresh_sp_app_visit_count";
     private static final String REFRESH_SP_REGION_VISIT_COUNT = "refresh_sp_region_visit_count";
     private SharedPreferences spAppVisitCount;

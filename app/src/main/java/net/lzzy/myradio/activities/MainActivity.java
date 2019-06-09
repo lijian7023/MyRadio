@@ -18,6 +18,7 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.fragments.ChartFragment;
 import net.lzzy.myradio.fragments.FindFragment;
 import net.lzzy.myradio.fragments.LocalFragment;
+import net.lzzy.myradio.models.FavoriteFactory;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
 import net.lzzy.myradio.utils.AppUtils;
@@ -71,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
+                Fragment fragment= fragments.get(i);
+                if (fragment instanceof FindFragment){
+                    ((FindFragment) fragment).updateFavorite();
+                }else  if (fragment instanceof LocalFragment){
+                    ((LocalFragment) fragment).updateFavorite();
+                }
 
             }
 

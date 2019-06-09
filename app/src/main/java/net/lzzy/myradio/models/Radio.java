@@ -31,7 +31,7 @@ public class Radio implements Jsonable {
     private List<RadioCategory> categories;
     public Radio(){}
 
-    public int getContentId() {
+    public int  getContentId() {
         return contentId;
     }
 

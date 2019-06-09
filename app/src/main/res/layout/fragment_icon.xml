@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
@@ -8,9 +9,9 @@
     <ImageView
         android:id="@+id/radio_icon_img"
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="104dp"
         android:layout_gravity="center"
-        android:background="@drawable/tp" />
+        tools:background="@drawable/tp" />
     <TextView
         android:id="@+id/radio_name_tv_title"
         android:layout_width="wrap_content"
@@ -18,6 +19,9 @@
         android:textSize="20sp"
         android:layout_gravity="center"
         android:textColor="#1A1A1A"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:maxEms="5"
         android:text="广西交通广播"/>
 
     <LinearLayout
@@ -40,9 +44,9 @@
 
         <ImageView
             android:id="@+id/fragment_icon_collect"
-            android:background="@drawable/collect"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/off_favorite" />
 
     </LinearLayout>
 
