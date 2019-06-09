@@ -65,6 +65,7 @@ public class LocalFragment extends BaseFragment {
 
     @Override
     protected void populate() {
+        //无数据视图
         gv = find(R.id.fragment_local_gv);
         View empty = find(R.id.fragment_local_empty);
         gv.setEmptyView(empty);
