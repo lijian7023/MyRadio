@@ -10,6 +10,7 @@ public class Favorite implements Sqlitable {
 
     @Ignored
     public static final String COl_RADIO_ID="radioId";
+    @AsPrimaryKey
     private int radioId;
     private String title;
     private int audienceCount;

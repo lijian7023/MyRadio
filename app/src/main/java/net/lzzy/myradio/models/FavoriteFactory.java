@@ -9,11 +9,10 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.constants.DbConstants;
 import net.lzzy.myradio.fragments.BaseFragment;
 import net.lzzy.myradio.utils.AppUtils;
-import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.SqlRepository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class FavoriteFactory  extends BaseFragment {
     private static final FavoriteFactory ourInstance = new FavoriteFactory();
@@ -34,7 +33,22 @@ public class FavoriteFactory  extends BaseFragment {
         gv= find(R.id.fragment_local_gv);
         View empty=find(R.id.fragment_local_empty);
         gv.setEmptyView(empty);
-       // adapter= new GenericAdapter<Radio>(getActivity(),R.layout) {}
+//        adapter= new GenericAdapter<Radio>(getActivity(),R.layout.fragment_local,) {
+//            @Override
+//            public void populate(ViewHolder viewHolder, Radio radio) {
+//
+//            }
+//
+//            @Override
+//            public boolean persistInsert(Radio radio) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean persistDelete(Radio radio) {
+//                return false;
+//            }
+//        }
 
 
 
@@ -99,5 +113,20 @@ public class FavoriteFactory  extends BaseFragment {
         if (favorite!=null){
             repository.delete(favorite);
         }
+    }
+    public List<Radio> getFavoriteRadio(){
+        List<Favorite>favorites=repository.get();
+        List<Radio> radios=new ArrayList<>();
+        for (Favorite favorite:favorites){
+            Radio radio=new Radio();
+            radio.setContentId(favorite.getRadioId());
+            radio.setAudienceCount(favorite.getAudienceCount());
+            radio.setCover(favorite.getCover());
+            radio.setTitle(favorite.getTitle());
+            radios.add(radio);
+        }
+
+
+        return radios;
     }
 }
