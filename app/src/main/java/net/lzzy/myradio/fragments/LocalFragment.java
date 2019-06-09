@@ -65,6 +65,7 @@ public class LocalFragment extends BaseFragment {
 
     @Override
     protected void populate() {
+        //无数据视图
         gv = find(R.id.fragment_local_gv);
         View empty = find(R.id.fragment_local_empty);
         gv.setEmptyView(empty);
@@ -95,15 +96,15 @@ public class LocalFragment extends BaseFragment {
                 viewHolder.setTextView(R.id.radio_listen_tv,"收听:"+(radio.getAudienceCount()));
                 ImageView img= viewHolder.getView(R.id.fragment_icon_collect);
                 int starId=FavoriteFactory.getInstance().isRadioStarred(String.valueOf(radio.getContentId()))?
-                        android.R.drawable.star_big_off:android.R.drawable.star_big_on;
+                        android.R.drawable.star_big_on:android.R.drawable.star_big_off;
                 img.setImageResource(starId);
                 boolean is=FavoriteFactory.getInstance().isRadioStarred(String.valueOf(radio.getContentId()));
-                if (is){
+                /*if (is){
                     img.setImageResource(android.R.drawable.star_big_on);
 
                 }else {
                     img.setImageResource(android.R.drawable.star_big_off);
-                }
+                }*/
                 img.setOnClickListener(new View.OnClickListener() {
 
 

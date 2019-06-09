@@ -157,20 +157,20 @@ public class FindFragment extends BaseFragment {
                 imageFavorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boolean collect = FavoriteFactory.getInstance().isRadioStarred(String.valueOf(radio));
+                        boolean collect = FavoriteFactory.getInstance().isRadioStarred(String.valueOf(radio.getContentId()));
                         if (collect) {
                             FavoriteFactory.getInstance().cancelStarRadio(radio.getContentId());
-                            imageFavorite.setImageResource(android.R.drawable.star_off);
+                            imageFavorite.setImageResource(android.R.drawable.star_big_off);
                         } else {
                             FavoriteFactory.getInstance().starRadio(radio.getContentId(),radio.getTitle(),radio.getAudienceCount(),radio.getCover());
-                            imageFavorite.setImageResource(android.R.drawable.star_on);
+                            imageFavorite.setImageResource(android.R.drawable.star_big_on);
                         }}
                 });
                 FavoriteFactory favoriteFactory = FavoriteFactory.getInstance();
                 if (favoriteFactory.isRadioStarred(String.valueOf(radio.getContentId()))){
-                    imageFavorite.setBackgroundResource(android.R.drawable.star_on);
+                    imageFavorite.setBackgroundResource(android.R.drawable.star_big_on);
                 } else {
-                    imageFavorite.setBackgroundResource(android.R.drawable.star_off);
+                    imageFavorite.setBackgroundResource(android.R.drawable.star_big_off);
                 }
             }
 
