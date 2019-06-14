@@ -22,8 +22,6 @@ public  class ViewUtils {
         return (int) (dpValue*scale+0.5f);
     }
 
-
-
     public static abstract class AbstractQueryHandler implements SearchView.OnQueryTextListener {
 
         @Override
@@ -33,7 +31,8 @@ public  class ViewUtils {
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            return handleQuery(newText);
+            handleQuery(newText);
+            return true;
         }
 
         /**
@@ -42,8 +41,9 @@ public  class ViewUtils {
          * @param kw keyword
          * @return end query
          */
-        public abstract boolean handleQuery(String kw);
+        public abstract void handleQuery(String kw);
     }
+
 
     public static abstract class AbstractTouchHandler implements View.OnTouchListener {
         @SuppressLint("ClickableViewAccessibility")

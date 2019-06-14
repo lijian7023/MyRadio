@@ -15,7 +15,7 @@
             <TextView
                 android:id="@+id/fragment_chart_tv_title"
                 android:gravity="center"
-                android:text="oooooooo"
+                android:text="地区访问比例（单位：%）"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent" />
@@ -58,7 +58,12 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
             <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/fragment_chart_bar"
+                android:id="@+id/fragment_chart_bar_program"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/fragment_chart_bar_station"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>

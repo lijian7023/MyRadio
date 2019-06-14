@@ -41,5 +41,14 @@ public class ApiConstants {
         return GET_RADIO_A+regionId+GET_RADIO_B+page+GET_RADIO_C+pagesize;
     }
 
+    /**
+     * 搜索
+     */
+    public static final String GET_SEARCH_RADIOA="https://i.qingting.fm/wapi/search?k=";
+    public static final String GET_SEARCH_RADIOB="&groups=channel_live";
+    public static String getSearchRadio(String title){
+        return GET_SEARCH_RADIOA+title+GET_SEARCH_RADIOB;
+    }
+
 
 }
