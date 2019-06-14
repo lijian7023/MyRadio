@@ -1,6 +1,8 @@
 package net.lzzy.myradio.utils;
 
+import java.nio.channels.Channel;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -12,4 +14,8 @@ public class DateTimeUtils {
             new SimpleDateFormat("yyyy_MM_dd HH:mm:ss", Locale.CANADA);
     public static final SimpleDateFormat DATE_FORMAT=
             new SimpleDateFormat("yyyy_MM_dd", Locale.CANADA);
+
+    public static String getDay(Date date) {
+        return null;
+    }
 }

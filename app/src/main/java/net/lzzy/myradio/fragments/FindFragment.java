@@ -1,6 +1,5 @@
 package net.lzzy.myradio.fragments;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import android.os.Message;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -20,13 +18,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.lzzy.myradio.R;
-import net.lzzy.myradio.activities.SplashActivity;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.FavoriteFactory;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
-import net.lzzy.myradio.network.AnalysisJsonService;
 import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
 import net.lzzy.myradio.utils.AppUtils;
@@ -34,15 +30,12 @@ import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.JsonConverter;
 import net.lzzy.sqllib.ViewHolder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 电台
@@ -63,6 +56,8 @@ public class FindFragment extends BaseFragment {
     private Radio radio;
     private ImageView imageView;
     private TextView tvRegion;
+    private int getLastVisiblePosition = 0, lastVisiblePositionY = 0;
+
 
     public static FindFragment newInstance(List<Region> regions,List<RadioCategory> radioCategories,
                                            String thisRegion){
@@ -77,21 +72,28 @@ public class FindFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
+
         if (getArguments()!=null){
             regions=getArguments().getParcelableArrayList(REGIONS);
             radioCategories=getArguments().getParcelableArrayList(RADIO_CATEGORIES);
             thisRegion= getArguments().getString(THIS_REGION);
         }
     }
+
+    @Nullable
+
+
     @Override
     protected void populate() {
         tvRegion = find(R.id.fragment_find_tv);
         GridView gv=find(R.id.fragment_find_gv);
-
-
-
         View empty=find(R.id.no_network);
         gv.setEmptyView(empty);
+        //点击跳转
+
+
+
+
         //设置默认地区
         for (int i = 0; i < regions.size(); i++) {
             Region region=regions.get(i);
@@ -172,6 +174,9 @@ public class FindFragment extends BaseFragment {
                 } else {
                     imageFavorite.setBackgroundResource(android.R.drawable.star_big_off);
                 }
+
+
+
             }
 
             @Override

@@ -4,7 +4,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.net.Uri;
@@ -18,6 +20,7 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.fragments.ChartFragment;
 import net.lzzy.myradio.fragments.FindFragment;
 import net.lzzy.myradio.fragments.LocalFragment;
+import net.lzzy.myradio.fragments.PlayFragment;
 import net.lzzy.myradio.models.FavoriteFactory;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
