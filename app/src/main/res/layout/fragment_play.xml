@@ -1,38 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:background="@color/colorBlue">
+        android:layout_width="366dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="27dp"
+        <LinearLayout
+            android:id="@+id/dialog_radio_programs_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:background="@drawable/retur" />
+
+            <TextView
+                android:id="@+id/dialog_radio_programs_tv_region"
+                android:layout_width="54dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#F08080"
+                android:textStyle="bold"
+                tools:text="广西" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/retur" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="328dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="  节目列表"
-
-            android:textSize="30dp" />
-
-        <ImageView
-            android:layout_width="46dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:background="@drawable/more" />
-
-
+            <TextView
+                android:id="@+id/dialog_radio_programs_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:textColor="@android:color/black"
+                tools:text="中央人民广播电视台" />
+        </LinearLayout>
     </LinearLayout>
 
 
-    <ListView
+    <ListView android:id="@+id/fragment_program_lv"
         android:layout_width="match_parent"
         android:layout_height="626dp"
         android:layout_gravity="center_vertical"

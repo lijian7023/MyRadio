@@ -38,17 +38,19 @@ public class AnalysisJsonService {
         return location.getRegion();
 
     }
-  public static List<PlayList> getPlayList(Integer contentId,String day) throws IOException, JSONException {
-      String json = RequestDateService.getPlayList(contentId, day);
-      List<PlayList> playLists = new ArrayList<>();
-      JSONObject jsonObject = new JSONObject(json);
-      JSONArray jsonArray = jsonObject.getJSONObject("date").getJSONArray(day);
-//      Gson gson=new Gson();
-//      for (int i = 0; i<jsonArray.length();i++){
-//          JSONObject object =jsonArray.getJSONObject(i);
-//          PlayList playList=gson.fromJson(object.toString(),playLists.class);
-//          playList.setPlayIng(DateTimeUtils.playIngf(playList.getStart_time(),playList.getEnd_time()));
- // }
-      return playLists;
-  }
+//  public static List<PlayList> getPlayList(Integer contentId,String day) throws IOException, JSONException {
+//      String json = RequestDateService.getPlayList(contentId, day);
+//      List<PlayList> playLists = new ArrayList<>();
+//      JSONObject jsonObject = new JSONObject(json);
+//      JSONArray jsonArray = jsonObject.getJSONObject("date").getJSONArray(day);
+////      Gson gson=new Gson();
+////      for (int i = 0; i<jsonArray.length();i++){
+////          JSONObject object =jsonArray.getJSONObject(i);
+////          PlayList playList=gson.fromJson(object.toString(),playLists.class);
+////          playList.setPlayIng(DateTimeUtils.playIngf(playList.getStart_time(),playList.getEnd_time()));
+// // }
+//      return playLists;
+//  }
+
+
 }

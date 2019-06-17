@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.MainActivity;
+import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.network.AnalysisJsonService;
 import net.lzzy.myradio.utils.DateTimeUtils;
@@ -34,32 +35,32 @@ public class PlayFragment extends BaseFragment {
     /**
      * 获取节目线程
      */
-    static abstract class GetRadioPlayList extends AsyncTask<Integer, Void, List<PlayList>> {
-
-        String day="1";
-        protected  GetRadioPlayList(){}
-        @Override
-        protected List<PlayList> doInBackground(Integer... integers) {
-            day= DateTimeUtils.getDay(new Date());
-            try {
-                return AnalysisJsonService.getPlayList(integers[0],day);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ArrayList<>();
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(List<PlayList> playLists) {
-            super.onPostExecute(playLists);
-            abstractPostExecute(playLists);
-        }
-
-        protected abstract void abstractPostExecute(List<PlayList> playLists);
-
-
-    }
+//    static abstract class GetRadioPlayList extends AsyncTask<Integer, Void, List<PlayList>> {
+//
+//        String day="1";
+//        protected  GetRadioPlayList(){}
+//        @Override
+//        protected List<PlayList> doInBackground(Integer... integers) {
+//            day= DateTimeUtils.getDay(new Date());
+//            try {
+//                return AnalysisJsonService.getPlayList(integers[0],day);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return new ArrayList<>();
+//            }
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<PlayList> playLists) {
+//            super.onPostExecute(playLists);
+//            abstractPostExecute(playLists);
+//        }
+//
+//        protected abstract void abstractPostExecute(List<PlayList> playLists);
+//
+//
+//    }
 
 
 }

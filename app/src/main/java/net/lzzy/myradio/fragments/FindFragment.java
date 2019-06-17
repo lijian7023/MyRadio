@@ -10,9 +10,13 @@ import androidx.appcompat.app.AlertDialog;
 import android.os.Message;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -20,12 +24,16 @@ import com.squareup.picasso.Picasso;
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.FavoriteFactory;
+import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
 import net.lzzy.myradio.network.ApiService;
+import net.lzzy.myradio.network.RequestDateService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.BaseAsyncTack;
+import net.lzzy.myradio.utils.ViewUtils;
 import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.JsonConverter;
 import net.lzzy.sqllib.ViewHolder;
@@ -57,6 +65,16 @@ public class FindFragment extends BaseFragment {
     private ImageView imageView;
     private TextView tvRegion;
     private int getLastVisiblePosition = 0, lastVisiblePositionY = 0;
+    private Spinner address;
+    private int page = 1;
+    private GridView grid;
+    private List<String> list=new ArrayList<>();
+    private int pos=1;
+    private String ip;
+
+
+
+
 
 
     public static FindFragment newInstance(List<Region> regions,List<RadioCategory> radioCategories,
@@ -79,16 +97,45 @@ public class FindFragment extends BaseFragment {
             thisRegion= getArguments().getString(THIS_REGION);
         }
     }
-
-    @Nullable
-
+//    private void viewRegions() {
+//        //region 实现下拉列表显示地区
+//        list = new ArrayList<>();
+//        for (Region region : regions) {
+//            if (region.getTitle().equals(ip)) {
+//                list.add(0, region.getTitle());
+//            } else {
+//                list.add(region.getTitle());
+//            }
+//        }
+//        ArrayAdapter<String> spAdapter = new ArrayAdapter<>(getActivity(), R.layout.sp_items, list);
+//        spAdapter.setDropDownViewResource(R.layout.sp_dropdown_items);
+//        address.setAdapter(spAdapter);
+//        address.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                page=1;
+//                adapterView.getSelectedItemId();
+//                String name = regions.get(i).getTitle();
+//                address.setTag(regions.get(i).getId());
+//                //getThisRadio(name);
+//                pos=i;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
+//        //endregion
+//    }
 
     @Override
     protected void populate() {
+        //viewRegions();
         tvRegion = find(R.id.fragment_find_tv);
-        GridView gv=find(R.id.fragment_find_gv);
+        grid=find(R.id.fragment_find_gv);
         View empty=find(R.id.no_network);
-        gv.setEmptyView(empty);
+        grid.setEmptyView(empty);
         //点击跳转
 
 
@@ -144,7 +191,7 @@ public class FindFragment extends BaseFragment {
         });
         genericAdapter = new GenericAdapter<Radio>(getContext(),R.layout.fragment_icon,radios) {
             @Override
-            public void populate(ViewHolder viewHolder, Radio radio) {
+                public void populate(ViewHolder viewHolder, Radio radio) {
                 ImageView imageView = viewHolder.getView(R.id.radio_icon_img);
                 Picasso.get().load(radio.getCover())
                         .into(imageView);
@@ -190,24 +237,68 @@ public class FindFragment extends BaseFragment {
                 return false;
             }
         };
-       /* AppUtils.getExecutor().execute(() -> {
+        AppUtils.getExecutor().execute(() -> {
             try {
                 String json=ApiService.okGet(ApiConstants.getRadio(regions.get(0).getId(), 1, 12));
                 handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });*/
+        });
 
-        /*new GetRadio<FindFragment>(this,regions.get(0).getId(), 1, 12) {
+        new GetRadio<FindFragment>(this,regions.get(0).getId(), 1, 12) {
             @Override
             protected void onPostExecute(List<Radio> radios, FindFragment findFragment) {
                 findFragment.radios.clear();
                 findFragment.radios.addAll(radios);
                 findFragment.genericAdapter.notifyDataSetChanged();
             }
-        };*/
-       gv.setAdapter(genericAdapter);
+        };
+        grid.setAdapter(genericAdapter);
+        //滚动加载电台
+        grid.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    //滚动到底部
+                    if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                        View v = view.getChildAt(view.getChildCount() - 1);
+                        int[] location = new int[2];
+                        //获取在整个屏幕内的绝对坐标
+                        v.getLocationOnScreen(location);
+                        int y = location[1];
+                        //拖动加载数据
+                        if (view.getLastVisiblePosition() != getLastVisiblePosition && lastVisiblePositionY != y) {
+                            getLastVisiblePosition = view.getLastVisiblePosition();
+                            lastVisiblePositionY = y;
+                            page++;
+                            return;
+                        }
+                    }
+                    //未滚动到底部，第二次拖至底部都初始化
+                    getLastVisiblePosition = 0;
+                    lastVisiblePositionY = 0;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+        //region 点击电台进入节目列表
+        grid.setOnItemClickListener((parent, view, position, id) -> {
+            ViewUtils.showPrograms(getContext(),list.get(pos)
+                    ,radios.get(position).getTitle(),new ArrayList<>());
+            new BaseAsyncTack(){
+                @Override
+                protected void abstractOnPostExecute(List<PlayList> radioPrograms) {
+                    ViewUtils.updateRadioProgramsAdapter(radioPrograms);
+                }
+            }.execute(radios.get(position).getContentId());
+        });
+
     }
 
     @Override

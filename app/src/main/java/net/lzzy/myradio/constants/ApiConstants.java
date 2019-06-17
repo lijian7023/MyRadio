@@ -32,7 +32,7 @@ public class ApiConstants {
     /**
      * 获取到电台节目列表
      */
-    private static final String GET_RADIO_PLAYLIST_A="https://rapi.qingting.fm/v2/channels";
+    public static final String GET_RADIO_PLAYLIST_A="https://rapi.qingting.fm/v2/channels";
 
 
     private static final String GET_RADIO_PLAYLIST_B="/playbills?day=";
