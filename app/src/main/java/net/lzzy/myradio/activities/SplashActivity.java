@@ -39,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final int WHAT_EXCEPTION = 1;
     public static final int WHAT_COUNT_DONE = 2;
     public static final int WHAT_GET_QUOTE_OK = 3;
+    public static final int WHAT_GET_QUOTE_O = 4;
     public static final String REGIONS = "regions";
     public static final String RADIO_CATEGORIES = "radioCategories";
     public static final String THIS_REGION = "thisRegion";
@@ -78,6 +79,8 @@ public class SplashActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     break;
+
+
                 default:
                     break;
             }

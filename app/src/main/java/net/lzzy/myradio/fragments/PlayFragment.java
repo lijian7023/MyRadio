@@ -3,6 +3,11 @@ package net.lzzy.myradio.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.MainActivity;
@@ -20,6 +25,8 @@ import java.util.List;
  * Description:
  */
 public class PlayFragment extends BaseFragment {
+    private ListView lv;
+
     public static final String RADIO_PROGRAMS = "radioPrograms";
     private List<PlayList> radioPrograms=new ArrayList<>();
 
@@ -31,8 +38,18 @@ public class PlayFragment extends BaseFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
+
     @Override
     protected void populate() {
+        //点击跳转到播放器
+        lv=find(R.id.fragment_program_lv);
+        lv.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
 
     }
 
