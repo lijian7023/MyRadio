@@ -29,15 +29,18 @@ public class ApiConstants {
     public static final String JSON_RADIO_COVER = "cover";
     public static final String JSON_RADIO_TITLE = "title";
     public static final String JSON_RADIO_DESCRIPTION = "description";
+
+
+
     /**
      * 获取到电台节目列表
      */
-    public static final String GET_RADIO_PLAYLIST_A="https://rapi.qingting.fm/v2/channels";
+    public static final String GET_RADIO_PLAYLIST_A="https://rapi.qingting.fm/v2/channels/";
 
 
     private static final String GET_RADIO_PLAYLIST_B="/playbills?day=";
-    public  static  String getRadioPlayList(int contenId, String day){
-        return GET_RADIO_PLAYLIST_A+contenId+GET_RADIO_PLAYLIST_B+day;
+    public  static  String getRadioPlayList(int contentId, String day){
+        return GET_RADIO_PLAYLIST_A+contentId+GET_RADIO_PLAYLIST_B+day;
     }
     public static final String JSON_RADIO_PLAY_ID="id";
     public static final String JSON_RADIO_PLAY_START_TIME = "start_time";

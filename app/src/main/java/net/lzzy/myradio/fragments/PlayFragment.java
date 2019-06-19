@@ -1,6 +1,8 @@
 package net.lzzy.myradio.fragments;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Parcelable;
 
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.MainActivity;
@@ -18,6 +20,17 @@ import java.util.List;
  * Description:
  */
 public class PlayFragment extends BaseFragment {
+    public static final String RADIO_PROGRAMS = "radioPrograms";
+    private List<PlayList> radioPrograms=new ArrayList<>();
+
+    public static PlayFragment newInstance(List<PlayList> radioPrograms){
+        PlayFragment fragment=new PlayFragment();
+        Bundle bundle=new Bundle();
+
+        bundle.putParcelableArrayList(RADIO_PROGRAMS, (ArrayList<? extends Parcelable>) radioPrograms);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
     @Override
     protected void populate() {
 

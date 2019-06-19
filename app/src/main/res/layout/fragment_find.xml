@@ -26,7 +26,7 @@
             <ImageView
                 android:layout_width="46dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/dw" />
+                android:src="@drawable/location" />
 
             <TextView
                 android:id="@+id/fragment_find_tv"

@@ -17,6 +17,7 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.fragments.PlayFragment;
 import net.lzzy.myradio.models.Broadcaster;
 import net.lzzy.myradio.models.PlayList;
+import net.lzzy.myradio.models.Radio;
 import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.ViewHolder;
 

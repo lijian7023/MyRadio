@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -19,9 +21,12 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.Favorite;
 import net.lzzy.myradio.models.FavoriteFactory;
+import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.BaseAsyncTack;
+import net.lzzy.myradio.utils.ViewUtils;
 import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.ViewHolder;
 
@@ -36,14 +41,9 @@ public class LocalFragment extends BaseFragment {
     private List<Radio> radios=FavoriteFactory.getInstance().getFavoriteRadio();
     private GridView gv;
     private GenericAdapter<Radio> adapter;
-
-
     private String mParam1;
     private String mParam2;
-
-
-
-
+    private TextView tvRegion;
 
 
     private OnFragmentInteractionListener mListener;
@@ -70,22 +70,6 @@ public class LocalFragment extends BaseFragment {
         View empty = find(R.id.fragment_local_empty);
         gv.setEmptyView(empty);
 
-        //GenericAdapter<Favorite> adapter = new GenericAdapter<Favorite>(getActivity(), R.layout.fragment_icon,radios) {
-        //    @Override
-        //    public void populate(ViewHolder viewHolder, Favorite favorite) {
-
-        //    }
-
-         //   @Override
-         //   public boolean persistInsert(Favorite favorite) {
-         //       return false;
-         //   }
-
-          //  @Override
-          //  public boolean persistDelete(Favorite favorite) {
-           //     return false;
-          //         }
-       // };
         adapter = new GenericAdapter<Radio>(getContext(),R.layout.fragment_icon,radios) {
             @Override
             public void populate(ViewHolder viewHolder, Radio radio) {
@@ -134,6 +118,18 @@ public class LocalFragment extends BaseFragment {
 
         };
         gv.setAdapter(adapter);
+        //点击进入节目列表
+        gv.setOnItemClickListener((parent, view, position, id) -> {
+            ViewUtils.showPrograms(getContext(),"返回"
+                    ,radios.get(position).getTitle(),new ArrayList<>());
+            new BaseAsyncTack(){
+                @Override
+                protected void abstractOnPostExecute(List<PlayList> radioPrograms) {
+                    ViewUtils.updateRadioProgramsAdapter(radioPrograms);
+                }
+            }.execute(radios.get(position).getContentId());
+        });
+
     }
 
     @Override

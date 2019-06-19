@@ -136,6 +136,7 @@ public class FindFragment extends BaseFragment {
         grid=find(R.id.fragment_find_gv);
         View empty=find(R.id.no_network);
         grid.setEmptyView(empty);
+
         //点击跳转
 
 
@@ -289,7 +290,7 @@ public class FindFragment extends BaseFragment {
         });
         //region 点击电台进入节目列表
         grid.setOnItemClickListener((parent, view, position, id) -> {
-            ViewUtils.showPrograms(getContext(),list.get(pos)
+            ViewUtils.showPrograms(getContext(),tvRegion.getText().toString()
                     ,radios.get(position).getTitle(),new ArrayList<>());
             new BaseAsyncTack(){
                 @Override
@@ -409,4 +410,5 @@ public class FindFragment extends BaseFragment {
             }
         }
     }
+
 }

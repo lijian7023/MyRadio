@@ -3,10 +3,10 @@
     android:shape="oval"
     android:useLevel="false">
 
-    <solid android:color="#000000" />
+    <solid android:color="#FFA07A" />
     <stroke
         android:width="0dp"
-        android:color="#000000" />
+        android:color="#FFA07A" />
     <size
         android:width="250dp"
         android:height="250dp" />
