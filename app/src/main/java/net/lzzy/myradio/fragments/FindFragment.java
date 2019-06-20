@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 
 import android.os.Message;
 import android.os.Parcelable;
@@ -30,6 +31,7 @@ import net.lzzy.myradio.network.AnalysisJsonService;
 import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.ViewUtils;
 import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.JsonConverter;
 import net.lzzy.sqllib.ViewHolder;
@@ -63,6 +65,8 @@ public class FindFragment extends BaseFragment {
     private Radio radio;
     private ImageView imageView;
     private TextView tvRegion;
+    private SearchView search;
+
 
     public static FindFragment newInstance(List<Region> regions,List<RadioCategory> radioCategories,
                                            String thisRegion){
@@ -85,6 +89,33 @@ public class FindFragment extends BaseFragment {
     }
     @Override
     protected void populate() {
+        search = find(R.id.fragment_find_searchView);
+        search.setQueryHint("请输入关键词搜索");
+        search.setOnQueryTextListener(new ViewUtils.AbstractQueryHandler() {
+            @Override
+            public void handleQuery(String kw) {
+                if ("".equals(kw)) {
+                    AppUtils.getExecutor().execute(() -> {
+                        try {
+                            String json=ApiService.okGet(ApiConstants.getRadio((int) tvRegion.getTag(), 1, 12));
+                            handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } else {
+                    new SearchRadioThread<FindFragment>(FindFragment.this) {
+
+                        @Override
+                        protected void onPostExecute(List<Radio> radios, FindFragment findFragment) {
+                            findFragment.radios.clear();
+                            findFragment.radios.addAll(radios);
+                            findFragment.genericAdapter.notifyDataSetChanged();
+                        }
+                    }.execute(kw);
+                }
+            }
+        });
         tvRegion = find(R.id.fragment_find_tv);
         GridView gv=find(R.id.fragment_find_gv);
 
@@ -313,4 +344,38 @@ public class FindFragment extends BaseFragment {
             }
         }
     }
+    abstract class SearchRadioThread<T> extends AsyncTask<String,Void,List<Radio>> {
+         WeakReference<T> context;
+        protected SearchRadioThread(T context){
+            this.context = new WeakReference<>(context);
+        }
+        /**
+         * 执行线程前
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected List<Radio> doInBackground(String... strings) {
+            try {
+                return AnalysisJsonService.getSearchRadio(strings[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ArrayList<>();
+            }
+        }
+        /**
+         * 获取到数据后
+         *
+         */
+        @Override
+        protected void onPostExecute(List<Radio> radios) {
+            super.onPostExecute(radios);
+            T t = context.get();
+            onPostExecute(radios,t);
+        }
+        protected abstract void onPostExecute(List<Radio> radios, T t);
+    }
+
 }
