@@ -2,19 +2,15 @@ package net.lzzy.myradio.network;
 
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.Location;
-import net.lzzy.myradio.models.PlayList;
+import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
-import net.lzzy.myradio.utils.DateTimeUtils;
 import net.lzzy.sqllib.JsonConverter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AnalysisJsonService {
@@ -38,7 +34,12 @@ public class AnalysisJsonService {
         return location.getRegion();
 
     }
-
-
+    public static List<Radio> getSearchRadio(String key) throws IOException, JSONException, InstantiationException, IllegalAccessException {
+        String json=ApiService.okGet(ApiConstants.getSearchRadio(key));
+        JSONObject jsonObject=new JSONObject(json);
+        JsonConverter<Radio> converter = new JsonConverter<>(Radio.class);
+        return converter.getArray(jsonObject.getJSONObject("data").getJSONArray("data").
+                getJSONObject(0).getString("docs"));
+    }
 
 }
