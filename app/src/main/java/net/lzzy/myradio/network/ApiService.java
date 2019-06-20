@@ -2,6 +2,8 @@ package net.lzzy.myradio.network;
 
 import android.text.TextUtils;
 
+import net.lzzy.myradio.constants.ApiConstants;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -66,32 +68,15 @@ public class ApiService {
         }
     }
 
-    public static String okGet(String address) throws IOException {
-        Request request = new Request.Builder()
-                .url(address)
-                .build();
-        //同步：Response response = CLIENT.newCall(request).execute()
+    public static String okGet(String address)throws IOException{
+        Request request = new Request.Builder().url(address).build();
         try(Response response = CLIENT.newCall(request).execute()){
-            if (response.isSuccessful()) {
-                assert response.body() != null;
+            if (response.isSuccessful()){
                 return response.body().string();
-            } else {
-                throw new IOException("错误码：" + response.code());
+            }else {
+                throw new IOException("错误码:"+response.code());
             }
         }
-        //region 异步：
-        /*Response response = CLIENT.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-            }
-        });*/
-        //endregion
     }
 
     public static String okGet(String address, String args, HashMap<String,Object> headers) throws IOException {
@@ -152,4 +137,6 @@ public class ApiService {
             return response.body().string();
         }
     }
+
+
 }

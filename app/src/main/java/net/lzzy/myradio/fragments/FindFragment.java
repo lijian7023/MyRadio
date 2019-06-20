@@ -13,9 +13,11 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -24,6 +26,7 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.SplashActivity;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.FavoriteFactory;
+import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
@@ -31,6 +34,7 @@ import net.lzzy.myradio.network.AnalysisJsonService;
 import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.BaseAsyncTack;
 import net.lzzy.myradio.utils.ViewUtils;
 import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.JsonConverter;
@@ -58,6 +62,8 @@ public class FindFragment extends BaseFragment {
     private List<Region> regions=new ArrayList<>();
     private List<RadioCategory> radioCategories=new ArrayList<>();
     private String thisRegion="";
+    private int thisPag =1;
+    private int pag;
     private GenericAdapter<Radio> genericAdapter;
     private List<Radio> radios=new ArrayList<>();
     private static final int WHAT_GET_RADIO_OK = 1;
@@ -65,6 +71,18 @@ public class FindFragment extends BaseFragment {
     private Radio radio;
     private ImageView imageView;
     private TextView tvRegion;
+    private int getLastVisiblePosition = 0, lastVisiblePositionY = 0;
+    private Spinner address;
+    private int page = 1;
+    private GridView grid;
+    private List<String> list=new ArrayList<>();
+    private int pos=1;
+    private String ip;
+
+
+
+
+
     private SearchView search;
 
 
@@ -149,6 +167,7 @@ public class FindFragment extends BaseFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        page=1;
                         String regionText = items[which];
                         for (Region region:regions) {
                             if (region.getTitle().equals(regionText)) {
@@ -157,7 +176,9 @@ public class FindFragment extends BaseFragment {
                                 AppUtils.getExecutor().execute(() -> {
                                     try {
                                         String json=ApiService.okGet(ApiConstants.getRadio(region.getId(), 1, 12));
-                                        handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
+                                        Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+                                        message.arg1=1;
+                                        handler.sendMessage(message);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -173,7 +194,7 @@ public class FindFragment extends BaseFragment {
         });
         genericAdapter = new GenericAdapter<Radio>(getContext(),R.layout.fragment_icon,radios) {
             @Override
-            public void populate(ViewHolder viewHolder, Radio radio) {
+                public void populate(ViewHolder viewHolder, Radio radio) {
                 ImageView imageView = viewHolder.getView(R.id.radio_icon_img);
                 Picasso.get().load(radio.getCover())
                         .into(imageView);
@@ -203,6 +224,9 @@ public class FindFragment extends BaseFragment {
                 } else {
                     imageFavorite.setBackgroundResource(android.R.drawable.star_big_off);
                 }
+
+
+
             }
 
             @Override
@@ -216,24 +240,76 @@ public class FindFragment extends BaseFragment {
                 return false;
             }
         };
-       /* AppUtils.getExecutor().execute(() -> {
+        AppUtils.getExecutor().execute(() -> {
             try {
                 String json=ApiService.okGet(ApiConstants.getRadio(regions.get(0).getId(), 1, 12));
-                handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
+               Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+               message.arg1=1;
+                handler.sendMessage(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });*/
-
-        /*new GetRadio<FindFragment>(this,regions.get(0).getId(), 1, 12) {
+        });
+        gv.setAdapter(genericAdapter);
+        //滚动加载电台
+        gv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            protected void onPostExecute(List<Radio> radios, FindFragment findFragment) {
-                findFragment.radios.clear();
-                findFragment.radios.addAll(radios);
-                findFragment.genericAdapter.notifyDataSetChanged();
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    //滚动到底部
+                    if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                        View v = view.getChildAt(view.getChildCount() - 1);
+                        int[] location = new int[2];
+                        //获取在整个屏幕内的绝对坐标
+                        v.getLocationOnScreen(location);
+                        int y = location[1];
+                        //拖动加载数据
+                        if (view.getLastVisiblePosition() != getLastVisiblePosition && lastVisiblePositionY != y) {
+                            getLastVisiblePosition = view.getLastVisiblePosition();
+                            lastVisiblePositionY = y;
+
+                            return;
+                        }else if (view.getLastVisiblePosition()== getLastVisiblePosition && lastVisiblePositionY ==y)
+                        {
+                            page++;
+                            AppUtils.getExecutor().execute(() -> {
+                                try {
+                                    String json=ApiService.okGet(ApiConstants.getRadio((Integer) tvRegion.getTag(), page, 12));
+                                    Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+                                    message.arg1=0;
+                                    handler.sendMessage(message);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+
+                        }
+                    }
+                    //未滚动到底部，第二次拖至底部都初始化
+                    getLastVisiblePosition = 0;
+                    lastVisiblePositionY = 0;
+                }
             }
-        };*/
-       gv.setAdapter(genericAdapter);
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+        //region 点击电台进入节目列表
+        gv.setOnItemClickListener((parent, view, position, id) -> {
+            ViewUtils.showPrograms(getContext(),tvRegion.getText().toString()
+                    ,radios.get(position).getTitle(),new ArrayList<>());
+            new BaseAsyncTack(){
+                @Override
+                protected void abstractOnPostExecute(List<PlayList> radioPrograms) {
+                    ViewUtils.updateRadioProgramsAdapter(radioPrograms);
+                }
+            }.execute(radios.get(position).getContentId());
+        });
+
     }
 
     @Override
@@ -250,7 +326,9 @@ public class FindFragment extends BaseFragment {
         AppUtils.getExecutor().execute(() -> {
             try {
                 String json=ApiService.okGet(ApiConstants.getRadio((Integer) tvRegion.getTag(), 1, 12));
-                handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
+                Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+                message.arg1=1;
+                handler.sendMessage(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -327,7 +405,9 @@ public class FindFragment extends BaseFragment {
                         String jsonArray=object.getJSONObject("Data").getString("items");
                         JsonConverter<Radio> converter=new JsonConverter<>(Radio.class);
                         List<Radio> radios = new ArrayList<>(converter.getArray(jsonArray));
-                        fragment.radios.clear();
+                        if (msg.arg1==1){
+                            fragment.radios.clear();
+                        }
                         fragment.radios.addAll(radios);
                         fragment.genericAdapter.notifyDataSetChanged();
                     } catch (Exception e) {

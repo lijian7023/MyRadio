@@ -115,7 +115,6 @@ public class Radio implements Jsonable {
     public JSONObject toJson() throws JSONException {
         return null;
     }
-
     @Override
     public void fromJson(JSONObject jsonObject) throws JSONException {
             contentId=jsonObject.getInt(ApiConstants.JSON_RADIO_CONTENT_ID);

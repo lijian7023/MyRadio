@@ -4,7 +4,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.net.Uri;
@@ -18,6 +20,7 @@ import net.lzzy.myradio.R;
 import net.lzzy.myradio.fragments.ChartFragment;
 import net.lzzy.myradio.fragments.FindFragment;
 import net.lzzy.myradio.fragments.LocalFragment;
+import net.lzzy.myradio.fragments.PlayFragment;
 import net.lzzy.myradio.models.FavoriteFactory;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
@@ -28,7 +31,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements  LocalFragment.OnFragmentInteractionListener,
         FindFragment.OnFragmentInteractionListener, View.OnClickListener {
-    private int[] tabIds = {R.id.tab1,R.id.tab2,R.id.tab3};
+    private int[] tabIds = {R.id.tab1,R.id.tab2,R.id.tab3,R.id.tab4};
     private List<Fragment> fragments;
     private ImageButton img1;
     private TextView tv1;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
     private TextView tv2;
     private ImageButton img3;
     private TextView tv3;
+    private ImageButton img4;
+    private TextView tv4;
     private int colorNormal;
     private int colorPressed;
     private StaticViewPager pager;
@@ -100,20 +105,27 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
         tv2 = findViewById(R.id.tv2);
         img3 = findViewById(R.id.btn3);
         tv3 = findViewById(R.id.tv3);
+        img4 = findViewById(R.id.btn4);
+        tv4 = findViewById(R.id.tv4);
         colorNormal = ContextCompat.getColor(this, R.color.iconNormal);
         colorPressed = ContextCompat.getColor(this, android.R.color.white);
         findViewById(R.id.tab1).setOnClickListener(this);
         findViewById(R.id.tab2).setOnClickListener(this);
         findViewById(R.id.tab3).setOnClickListener(this);
+        findViewById(R.id.tab4).setOnClickListener(this);
+
     }
 
     private void selectTab(int tabId){
         img1.setImageResource(R.drawable.ic_local_normal);
         img2.setImageResource(R.drawable.ic_find_normal);
         img3.setImageResource(R.drawable.ic_chart_normal);
+        img4.setImageResource(R.drawable.ic_chart_normal);
+
         tv1.setTextColor(colorNormal);
         tv2.setTextColor(colorNormal);
         tv3.setTextColor(colorNormal);
+        tv4.setTextColor(colorNormal);
         switch (tabId){
             case R.id.tab1:
                 img1.setImageResource(R.drawable.ic_local_pressed);
@@ -129,6 +141,11 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
                 img3.setImageResource(R.drawable.ic_chart_pressed);
                 tv3.setTextColor(colorPressed);
                 pager.setCurrentItem(2);
+                break;
+            case R.id.tab4:
+                img4.setImageResource(R.drawable.ic_album_pressed);
+                tv4.setTextColor(colorPressed);
+                pager.setCurrentItem(3);
                 break;
             default:
                 break;

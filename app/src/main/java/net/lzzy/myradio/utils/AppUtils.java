@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
 /**
  * Created by lzzy_gxy on 2019/3/11.
  * Description:
@@ -48,6 +51,16 @@ public class AppUtils extends Application {
     private static WeakReference<Context> wContext;
     private static List<Activity> activities = new LinkedList<>();
     private static String runningActivity;
+
+    private static IjkMediaPlayer player;
+
+    public static IjkMediaPlayer getPlayer(){
+        if (player == null){
+            player = new IjkMediaPlayer();
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
+        return player;
+    }
 
     @Override
     public void onCreate() {
