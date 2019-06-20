@@ -57,6 +57,8 @@ public class FindFragment extends BaseFragment {
     private List<Region> regions=new ArrayList<>();
     private List<RadioCategory> radioCategories=new ArrayList<>();
     private String thisRegion="";
+    private int thisPag =1;
+    private int pag;
     private GenericAdapter<Radio> genericAdapter;
     private List<Radio> radios=new ArrayList<>();
     private static final int WHAT_GET_RADIO_OK = 1;
@@ -168,6 +170,7 @@ public class FindFragment extends BaseFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        page=1;
                         String regionText = items[which];
                         for (Region region:regions) {
                             if (region.getTitle().equals(regionText)) {
@@ -176,7 +179,9 @@ public class FindFragment extends BaseFragment {
                                 AppUtils.getExecutor().execute(() -> {
                                     try {
                                         String json=ApiService.okGet(ApiConstants.getRadio(region.getId(), 1, 12));
-                                        handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
+                                        Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+                                        message.arg1=1;
+                                        handler.sendMessage(message);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -241,7 +246,9 @@ public class FindFragment extends BaseFragment {
         AppUtils.getExecutor().execute(() -> {
             try {
                 String json=ApiService.okGet(ApiConstants.getRadio(regions.get(0).getId(), 1, 12));
-                handler.sendMessage(handler.obtainMessage(WHAT_GET_RADIO_OK,json));
+               Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+               message.arg1=0;
+                handler.sendMessage(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -273,8 +280,23 @@ public class FindFragment extends BaseFragment {
                         if (view.getLastVisiblePosition() != getLastVisiblePosition && lastVisiblePositionY != y) {
                             getLastVisiblePosition = view.getLastVisiblePosition();
                             lastVisiblePositionY = y;
-                            page++;
+
                             return;
+                        }else if (view.getLastVisiblePosition()== getLastVisiblePosition && lastVisiblePositionY ==y)
+                        {
+                            page++;
+                            AppUtils.getExecutor().execute(() -> {
+                                try {
+                                    String json=ApiService.okGet(ApiConstants.getRadio((Integer) tvRegion.getTag(), page, 12));
+                                    Message message=handler.obtainMessage(WHAT_GET_RADIO_OK,json);
+                                    message.arg1=0;
+                                    handler.sendMessage(message);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+
                         }
                     }
                     //未滚动到底部，第二次拖至底部都初始化
@@ -393,7 +415,9 @@ public class FindFragment extends BaseFragment {
                         String jsonArray=object.getJSONObject("Data").getString("items");
                         JsonConverter<Radio> converter=new JsonConverter<>(Radio.class);
                         List<Radio> radios = new ArrayList<>(converter.getArray(jsonArray));
-                        fragment.radios.clear();
+                        if (msg.arg1==1){
+                            fragment.radios.clear();
+                        }
                         fragment.radios.addAll(radios);
                         fragment.genericAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
