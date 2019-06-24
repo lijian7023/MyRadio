@@ -8,6 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.MainActivity;
@@ -41,14 +44,7 @@ public class PlayFragment extends BaseFragment {
 
     @Override
     protected void populate() {
-        //点击跳转到播放器
-        lv=find(R.id.fragment_program_lv);
-        lv.setOnItemClickListener(new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-        });
 
 
     }
@@ -60,6 +56,7 @@ public class PlayFragment extends BaseFragment {
 
     @Override
     public void search(String kw) {
+
 
     }
     /**
