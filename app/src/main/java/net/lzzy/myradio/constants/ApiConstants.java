@@ -1,6 +1,9 @@
 package net.lzzy.myradio.constants;
 
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.DateTimeUtils;
+
+import java.util.Date;
 
 
 /**
@@ -81,6 +84,17 @@ public class ApiConstants {
         return GET_SEARCH_RADIOA+title+GET_SEARCH_RADIOB;
     }
 
-
+    /**
+     * 轮播地址：https://rapi.qingting.fm/cache/20190525/4875/4875_20190525_010000_060000_24_0.aac
+     */
+    private static final String RADIO_PROGRAMS_ONE="http://lcache.qingting.fm/cache/";
+    private static final String RADIO_PROGRAMS_TOW="_24_0.aac";
+    public static String getRadioProgramsPlay(int programsId,String startTime,String endTime){
+        String date= DateTimeUtils.DATE_TIME.format(new Date());
+        startTime=startTime.replace(":","");
+        endTime=endTime.replace(":","");
+        return RADIO_PROGRAMS_ONE+date+"/"+programsId+"/"+programsId+"_"+date+"_"+startTime+"_"+
+                endTime+RADIO_PROGRAMS_TOW;
+    }
 
 }

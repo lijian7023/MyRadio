@@ -58,12 +58,17 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
             <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/fragment_chart_bar_program"
+                android:id="@+id/fragment_chart_bar1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
             <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/fragment_chart_bar_station"
+                android:id="@+id/fragment_chart_bar2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+            <com.github.mikephil.charting.charts.RadarChart
+                android:id="@+id/fragment_chart_radar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
