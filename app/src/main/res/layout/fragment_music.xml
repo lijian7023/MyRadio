@@ -42,7 +42,7 @@
                 android:layout_width="350dp"
                 android:layout_height="350dp"
                 android:background="@drawable/bizhi"
-                android:src="@drawable/bizhi" />
+                android:src="@drawable/bizhi"/>
         </LinearLayout>
 
         <TextView android:id="@+id/fragment_play_tv_title"

@@ -12,12 +12,15 @@ public class UserCookies {
     private SharedPreferences spAppVisitCount;
     private SharedPreferences spRegionVisitCount;
     private static final UserCookies INSTANCE = new UserCookies();
+    private SharedPreferences spRadioProgramsName;
+
 
     private UserCookies() {
         spAppVisitCount = AppUtils.getContext()
                 .getSharedPreferences(REFRESH_SP_APP_VISIT_COUNT, Context.MODE_PRIVATE);
         spRegionVisitCount= AppUtils.getContext()
                 .getSharedPreferences(REFRESH_SP_REGION_VISIT_COUNT, Context.MODE_PRIVATE);
+
     }
 
     public static UserCookies getInstance() {

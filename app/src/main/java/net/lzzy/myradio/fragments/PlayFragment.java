@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,9 @@ import net.lzzy.myradio.activities.MainActivity;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.network.AnalysisJsonService;
+import net.lzzy.myradio.utils.BaseAsyncTack;
 import net.lzzy.myradio.utils.DateTimeUtils;
+import net.lzzy.myradio.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +35,8 @@ public class PlayFragment extends BaseFragment {
 
     public static final String RADIO_PROGRAMS = "radioPrograms";
     private List<PlayList> radioPrograms=new ArrayList<>();
+    private PlayList playList;
+    private TextView tvPlayList;
 
     public static PlayFragment newInstance(List<PlayList> radioPrograms){
         PlayFragment fragment=new PlayFragment();
@@ -44,6 +49,16 @@ public class PlayFragment extends BaseFragment {
 
     @Override
     protected void populate() {
+//lv=find(R.id.fragment_program_lv).setOnClickListener(new View.OnClickListener() {
+//    @Override
+//    public void onClick(View v) {
+//
+//    }
+//});
+        //region 点击电台进入节目列表
+    lv=find(R.id.fragment_program_lv);
+
+
 
 
 

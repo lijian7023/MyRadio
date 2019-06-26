@@ -18,10 +18,12 @@ import androidx.annotation.Nullable;
 import com.squareup.picasso.Picasso;
 
 import net.lzzy.myradio.R;
+import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.Broadcaster;
 import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.DateTimeUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -47,6 +49,7 @@ public class PlayerFragment extends BaseFragment {
     public static final String ARG_URLS = "ARG_URLS";
     public static final String PLAY_POSITION = "PLAY_POSITION";
     private List<PlayList> playLists;
+
     public static final String SSS = "sss";
     public static final String TITLE = "title";
     public static final String PROGRAM_LISTS = "programLists";
@@ -62,7 +65,6 @@ public class PlayerFragment extends BaseFragment {
     private int position;
     private Radio radioFavorite;
     private List<String> urls;
-
     private String playUrl=null;
     private List<PlayList> questionResults;
     private String cover;
@@ -77,7 +79,6 @@ public class PlayerFragment extends BaseFragment {
     private ImageView imageView;
     private ImageView fan;
     private static boolean b;
-
     private FindFragment.OnFragmentInteractionListener mListener;
     private OnRemovePlayListener listener;
 
@@ -263,13 +264,14 @@ public class PlayerFragment extends BaseFragment {
 
     public static void exit(boolean back) {
         if (back) {
-            back = true;
+            b = true;
         } else {
-            back = false;
+            b = false;
         }
     }
 
     private void initViews(View view) {
+
         tvStart = view.findViewById(R.id.tv_start);
         tvEnd = view.findViewById(R.id.tv_end);
         bar = view.findViewById(R.id.bar);
@@ -323,6 +325,7 @@ public class PlayerFragment extends BaseFragment {
         address=new ArrayList<>();
         List<String> title = new ArrayList<>();
         List<String> anchor= new ArrayList<>();
+        List<String> aa=new ArrayList<>();
         for (PlayList playList : playLists){
             String titl= playList.getTitle();
             String anchors;
@@ -339,27 +342,20 @@ public class PlayerFragment extends BaseFragment {
 
             }
             title.add(titl);
-            String data = "yyyyMMdd";
-            String channelId = String.valueOf(playList.getChannelId());
-            String start = playList.getStartTime();
-            String end = playList.getEndTime();
-            String newTime = "HH:mm:ss";
-            String time1 = getPathTime(start, newTime);
-            String time2 = getPathTime(end, newTime);
-            int thisTime, startTime, endTime = 0;
-            thisTime = Integer.valueOf(getNewTime("HHmmss"));
-            startTime = Integer.valueOf(time1);
-            endTime = Integer.valueOf(time2);
-            String s;
-            if (thisTime >= startTime && thisTime <= endTime) {
-                s = "http://lhttp.qingting.fm/live/" + channelId + "/64k.mp3";
-                address.add(s);
-            } else if (thisTime < startTime) {
-            } else {
-                s = "http://lcache.qingting.fm/cache/" + getNewTime(data).concat("/").concat(channelId).concat("/")
-                        .concat(channelId).concat("_").concat(getNewTime(data)).concat("_").concat(time1).concat("_").concat(time2)
-                        .concat("_24_0.aac");
-                address.add(s);
+            String startTime=playList.getStartTime();
+            String endTime = playList.getEndTime();
+            int channelId=playList.getChannelId();
+            String playAddress;
+            try {
+                if (DateTimeUtils.isPlayTime(startTime,endTime)){
+                    playAddress=ApiConstants.getPlayimjUrl(channelId);
+                    aa.add(playAddress);
+                }else {
+                    playAddress= ApiConstants.getDemand(channelId,startTime,endTime);
+                    aa.add(playAddress);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
         urls1 = get(title.size(), title);
@@ -414,7 +410,7 @@ public class PlayerFragment extends BaseFragment {
     }
     public interface OnRemovePlayListener {
         /**
-         * 点击题目跳转
+         * 点击节目跳转
          *
          * @param
          */

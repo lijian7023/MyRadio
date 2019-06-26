@@ -96,6 +96,9 @@ public class FindFragment extends BaseFragment {
 public static void hideDialog(){dialog.hide();}
     public static void showDialog() {
 
+        if (dialog!=null){
+            dialog.show();
+        }
     }
 
     @Override
