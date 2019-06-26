@@ -6,15 +6,21 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.MainActivity;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.network.AnalysisJsonService;
+import net.lzzy.myradio.utils.BaseAsyncTack;
 import net.lzzy.myradio.utils.DateTimeUtils;
+import net.lzzy.myradio.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +35,8 @@ public class PlayFragment extends BaseFragment {
 
     public static final String RADIO_PROGRAMS = "radioPrograms";
     private List<PlayList> radioPrograms=new ArrayList<>();
+    private PlayList playList;
+    private TextView tvPlayList;
 
     public static PlayFragment newInstance(List<PlayList> radioPrograms){
         PlayFragment fragment=new PlayFragment();
@@ -41,14 +49,17 @@ public class PlayFragment extends BaseFragment {
 
     @Override
     protected void populate() {
-        //点击跳转到播放器
-        lv=find(R.id.fragment_program_lv);
-        lv.setOnItemClickListener(new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//lv=find(R.id.fragment_program_lv).setOnClickListener(new View.OnClickListener() {
+//    @Override
+//    public void onClick(View v) {
+//
+//    }
+//});
+        //region 点击电台进入节目列表
+    lv=find(R.id.fragment_program_lv);
 
-            }
-        });
+
+
 
 
     }
@@ -60,6 +71,7 @@ public class PlayFragment extends BaseFragment {
 
     @Override
     public void search(String kw) {
+
 
     }
     /**

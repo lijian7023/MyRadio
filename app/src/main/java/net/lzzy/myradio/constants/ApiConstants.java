@@ -96,5 +96,24 @@ public class ApiConstants {
         return RADIO_PROGRAMS_ONE+date+"/"+programsId+"/"+programsId+"_"+date+"_"+startTime+"_"+
                 endTime+RADIO_PROGRAMS_TOW;
     }
+    /**
+     * 播放地址
+     */
+    private static  String GET_PLAY_URL_A ="http://lhttp.qingting.fm/live";
+    private static  String GET_PLAY_URL_B ="/64.k.mp3";
+    public static String getPlayimjUrl(int playBillId){
+        return GET_PLAY_URL_A +playBillId+ GET_PLAY_URL_B;
+    }
+    private static  String GET_DEMAND_URL_A ="http://lcache.qingting.fm/cacha";
+    private static  String GET_DEMAND_URL_B ="_24_0.aac";
+
+    public static  String getDemand(int playBillId,String stat_time,String end_time){
+        String deta= DateTimeUtils.DATE_TIME_DEMAND.format(new Date());
+        stat_time=stat_time.replaceAll(":","");
+        end_time=end_time.replaceAll(":","");
+        return GET_DEMAND_URL_A + deta + "/" + playBillId + "/" +playBillId
+                +"_" + deta + "_" + stat_time +"_" +end_time +GET_DEMAND_URL_B;
+    }
+
 
 }

@@ -35,6 +35,7 @@ import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
 import net.lzzy.myradio.utils.AppUtils;
 import net.lzzy.myradio.utils.BaseAsyncTack;
+import net.lzzy.myradio.utils.MyDialog;
 import net.lzzy.myradio.utils.ViewUtils;
 import net.lzzy.sqllib.GenericAdapter;
 import net.lzzy.sqllib.JsonConverter;
@@ -78,12 +79,8 @@ public class FindFragment extends BaseFragment {
     private List<String> list=new ArrayList<>();
     private int pos=1;
     private String ip;
-
-
-
-
-
     private SearchView search;
+    private static MyDialog dialog;
 
 
     public static FindFragment newInstance(List<Region> regions,List<RadioCategory> radioCategories,
@@ -96,6 +93,14 @@ public class FindFragment extends BaseFragment {
         fragment.setArguments(args);
         return fragment;
     }
+public static void hideDialog(){dialog.hide();}
+    public static void showDialog() {
+
+        if (dialog!=null){
+            dialog.show();
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);

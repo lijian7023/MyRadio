@@ -5,7 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".activities.MainActivity">
+    <!--<FrameLayout android:id="@+id/activity_main_radio_fl"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+    <!--</FrameLayout>-->
 
     <net.lzzy.myradio.activities.StaticViewPager
         android:id="@+id/pager"
@@ -15,7 +21,8 @@
     <LinearLayout android:orientation="horizontal"
         android:background="#EBE77C4B"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
         <LinearLayout android:id="@+id/tab1"
             android:orientation="vertical"
             android:gravity="center"
@@ -72,28 +79,6 @@
                 android:textColor="@color/iconNormal"
                 android:text="分析"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tab4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/btn4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:clickable="false"
-                android:src="@drawable/ic_chart_normal" />
-            <TextView
-                android:id="@+id/tv4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="专辑"
-                android:textColor="@color/iconNormal" />
         </LinearLayout>
-    </LinearLayout>
+
 </LinearLayout>

@@ -35,6 +35,8 @@ public class UserCookies {
     private SharedPreferences spRegionVisitCount;
     private static final UserCookies INSTANCE = new UserCookies();
 
+
+
     private UserCookies() {
         spAppCount = AppUtils.getContext()
                 .getSharedPreferences("sp_app_count", Context.MODE_PRIVATE);
@@ -64,9 +66,6 @@ public class UserCookies {
                 .getSharedPreferences(REFRESH_SP_APP_VISIT_COUNT, Context.MODE_PRIVATE);
         spRegionVisitCount= AppUtils.getContext()
                 .getSharedPreferences(REFRESH_SP_REGION_VISIT_COUNT, Context.MODE_PRIVATE);
-
-
-
     }
 
     public static UserCookies getInstance() {
@@ -267,6 +266,4 @@ public class UserCookies {
     public int GetRegionVisitCount(String regionName){
         return spRegionVisitCount.getInt(regionName,0);
     }
-
-
 }
