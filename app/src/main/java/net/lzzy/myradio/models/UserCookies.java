@@ -78,21 +78,21 @@ public class UserCookies {
 
     //region APP访问量分析
 
-    /**
+/*    *//**
      * 获取使用量
-     **/
+     **//*
     public int getAppCount(String times) {
         return spAppCount.getInt(times, 0);
-    }
-
-    /**
+    }*/
+/*
+    *//**
      * 保存使用量
-     **/
+     **//*
     public void updateReadCount() {
         String time = DateTimeUtils.DATE_FORMAT.format(new Date());
         int count = getAppCount(time) + 1;
         spAppCount.edit().putInt(time, count).apply();
-    }
+    }*/
     //endregion
 
     //region 地区访问量分析

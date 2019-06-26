@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         AppUtils.addActivity(this);
+        //获取
          thisRenion=getIntent().getStringExtra(SplashActivity.THIS_REGION);
         regions=getIntent().getParcelableArrayListExtra(SplashActivity.REGIONS);
         radioCategories=getIntent().getParcelableArrayListExtra(SplashActivity.RADIO_CATEGORIES);

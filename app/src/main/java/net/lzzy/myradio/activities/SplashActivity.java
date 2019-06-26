@@ -63,17 +63,20 @@ public class SplashActivity extends AppCompatActivity {
         public void handleMessage(Message msg, SplashActivity activity) {
             switch (msg.what) {
                 case WHAT_COUNTING:
+                    //倒计时中：
+                    //1：显示倒计时
                     String display = msg.obj.toString() + "秒";
                     activity.time.setText(display);
                     break;
                 case WHAT_COUNT_DONE:
+                    //倒计时完成跳转到主页面（带数据put到主页面）
                     activity.gotoMain();
-
-
                     break;
                 case WHAT_GET_QUOTE_OK:
+                    //1:获取到名人名言
                     String quoteJSON = msg.obj.toString();
                     try {
+                        //2:显示名人名言
                         activity.hint.setText(JsonUtils.getQuote(quoteJSON));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -88,6 +91,9 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 跳转到主页面
+     */
     public void gotoMain() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putParcelableArrayListExtra(REGIONS, (ArrayList<? extends Parcelable>) regions);
@@ -106,10 +112,10 @@ public class SplashActivity extends AppCompatActivity {
         AppUtils.addActivity(this);
         initView();
         ThreadPoolExecutor executor = AppUtils.getExecutor();
+        //倒计时线程
         executor.execute(this::countDown);
+        //名人名言线程
         executor.execute(this::getQuoteDown);
-        executor.execute(this::getLocation);
-
         //执行获取所有的地区线程
         new GetRegion(this).execute();
         //执行获取所有电台类别线程
@@ -131,16 +137,6 @@ public class SplashActivity extends AppCompatActivity {
             handler.sendEmptyMessage(5);
         }
 
-    }
-
-    private void getLocation(){
-        try {
-            String json=ApiService.okGet(ApiConstants.GET_REGION);
-            Message message=handler.obtainMessage(WHAT_GET_LOCA_OK);
-            handler.sendMessage(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void countDown() {
@@ -280,5 +276,5 @@ public class SplashActivity extends AppCompatActivity {
                 DateTimeUtils.DATE_FORMAT.format(new Date()));
     }
 
-    }
+}
 

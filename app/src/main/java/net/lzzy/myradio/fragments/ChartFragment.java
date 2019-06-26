@@ -239,7 +239,7 @@ public class ChartFragment extends BaseFragment {
         lChart.getXAxis().setLabelRotationAngle(-75);
         ArrayList<Entry> entries = new ArrayList<>();
         for (int i = 29; i>=0; i--){
-            int times= UserCookies.getInstance().getAppCount(year+"-"+(month<10?"0"+month:month)+"-"+(day-i));
+            int times= UserCookies.getInstance().GetAppVisitCount(year+"-"+(month<10?"0"+month:month)+"-"+(day-i));
             entries.add(new Entry(28-i,times));
 
         }
@@ -561,7 +561,7 @@ public class ChartFragment extends BaseFragment {
         lChart.getXAxis().setLabelRotationAngle(-75);
         ArrayList<Entry> entries = new ArrayList<>();
         for (int i = 6; i>=0; i--){
-            int times= UserCookies.getInstance().getAppCount(year+"-"+(month<10?"0"+month:month)+"-"+(day-i));
+            int times= UserCookies.getInstance().GetAppVisitCount(year+"-"+(month<10?"0"+month:month)+"-"+(day-i));
             entries.add(new Entry(5-i,times));
 
         }
