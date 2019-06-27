@@ -23,8 +23,9 @@ public class RadioProgramsService {
     public static String getRadioProgramsFromServer(int contentId,String day) throws IOException {
         return ApiService.okGet(ApiConstants.getRadioPlayList(contentId,day));
     }
-
-    public static List<PlayList> getRadioPrograms(int contentId, String day) throws IllegalAccessException, JSONException, InstantiationException, IOException {
+    //解析到电台节目列表
+    public static List<PlayList> getRadioPrograms(int contentId, String day)
+            throws IllegalAccessException, JSONException, InstantiationException, IOException {
         String json=ApiService.okGet(ApiConstants.getRadioPlayList(contentId,day));
         JsonConverter<PlayList> converter = new JsonConverter<>(PlayList.class);
         JSONObject jsonObject = new JSONObject(json);
@@ -32,7 +33,8 @@ public class RadioProgramsService {
         List<PlayList> radioPrograms=converter.getArray(jsonObject1.getString(day));
         for (PlayList radioPrograms1:radioPrograms){
             try {
-                radioPrograms1.setPlay(DateTimeUtils.isPlayTime(radioPrograms1.getStartTime(),radioPrograms1.getEndTime()));
+                radioPrograms1.setPlay(DateTimeUtils.isPlayTime(radioPrograms1.
+                        getStartTime(),radioPrograms1.getEndTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

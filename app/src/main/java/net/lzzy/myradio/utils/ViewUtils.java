@@ -171,19 +171,21 @@ public  class ViewUtils {
         lv.setAdapter(adapter);
         dialog.setContentView(view);
         dialog.show();
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
+       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+             try {
                     if (DateTimeUtils.isStartTime(radioPrograms.get(position).getStartTime())){
-                        if (context instanceof MainActivity){
-                            UserCookies.getInstance().updateRadioProgramsName(String.valueOf(radioPrograms.get(position).getId()),radioPrograms.get(position).getTitle());
-                            UserCookies.getInstance().updateRadioPrograms(String.valueOf(radioPrograms.get(position).getId()),new Date());
-                            PlayerFragment fragment=PlayerFragment.newInstance(position,radioPrograms.get(position).getTitle(),AppUtils.getRadio(),radioPrograms);
-                            ((MainActivity) context).showPlayFragment(fragment);
-                            dialog.hide();
-                            adapter.notifyDataSetChanged();
+            if (context instanceof MainActivity){
+            UserCookies.getInstance().updateRadioProgramsName(String.valueOf
+             (radioPrograms.get(position).getId()),radioPrograms.get(position).getTitle());
+            UserCookies.getInstance().updateRadioPrograms(String.valueOf
+             (radioPrograms.get(position).getId()),new Date());
+            PlayerFragment fragment=PlayerFragment.newInstance
+           (position,radioPrograms.get(position).getTitle(),AppUtils.getRadio(),radioPrograms);
+                 ((MainActivity) context).showPlayFragment(fragment);
+                      dialog.hide();
+                      adapter.notifyDataSetChanged();
                         }
                     }else {
                         Toast.makeText(view.getContext(), "还未到播放时间", Toast.LENGTH_SHORT).show();

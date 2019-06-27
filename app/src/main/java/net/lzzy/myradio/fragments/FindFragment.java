@@ -311,8 +311,10 @@ public static void hideDialog(){dialog.hide();}
         //region 点击电台进入节目列表
         gv.setOnItemClickListener((parent, view, position, id) -> {
             AppUtils.setRadio(radios.get(position));
-            UserCookies.getInstance().updateRadioName(String.valueOf(radios.get(position).getContentId()),radios.get(position).getTitle());
-            UserCookies.getInstance().updateRadio(String.valueOf(radios.get(position).getContentId()),new Date());
+            UserCookies.getInstance().updateRadioName(String.valueOf
+                    (radios.get(position).getContentId()),radios.get(position).getTitle());
+            UserCookies.getInstance().updateRadio(String.valueOf
+                    (radios.get(position).getContentId()),new Date());
             ViewUtils.showPrograms(getContext(),tvRegion.getText().toString()
                     ,radios.get(position).getTitle(),new ArrayList<>());
             new BaseAsyncTack(){
