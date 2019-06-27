@@ -13,7 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.lzzy.myradio.R;
@@ -21,10 +23,12 @@ import net.lzzy.myradio.fragments.ChartFragment;
 import net.lzzy.myradio.fragments.FindFragment;
 import net.lzzy.myradio.fragments.LocalFragment;
 import net.lzzy.myradio.fragments.PlayFragment;
+import net.lzzy.myradio.fragments.PlayerFragment;
 import net.lzzy.myradio.models.FavoriteFactory;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
 import net.lzzy.myradio.utils.AppUtils;
+import net.lzzy.myradio.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,18 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
     private  List<Region> regions=new ArrayList<>();
     private List<RadioCategory> radioCategories=new ArrayList<>();
     private String thisRenion="";
+    private static FrameLayout frameLayout;
+    private static ImageView plaiImg;
+
+    public static void showPlayImage(){
+        frameLayout.setVisibility(View.GONE);
+        if (ViewUtils.isShow()){
+            plaiImg.setVisibility(View.VISIBLE);
+        }else {
+            plaiImg.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +121,14 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
         tv2 = findViewById(R.id.tv2);
         img3 = findViewById(R.id.btn3);
         tv3 = findViewById(R.id.tv3);
+        plaiImg = findViewById(R.id.fragment_chart_iv);
+        plaiImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                frameLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        frameLayout = findViewById(R.id.activity_main_radio_fl);
         colorNormal = ContextCompat.getColor(this, R.color.iconNormal);
         colorPressed = ContextCompat.getColor(this, android.R.color.white);
         findViewById(R.id.tab1).setOnClickListener(this);
@@ -145,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
     }
 
 
-
     @Override
     public void onClick(View v) {
         selectTab(v.getId());
@@ -153,6 +176,30 @@ public class MainActivity extends AppCompatActivity implements  LocalFragment.On
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void showPlayFragment(PlayerFragment fragment) {
+
+        frameLayout.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_radio_fl,fragment).commit();
+    }
+
+    public static void hinePlay(){
+        if (ViewUtils.isShow()) {
+            ViewUtils.getshow();
+            MainActivity.showPlayImage();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (ViewUtils.isShow()) {
+            ViewUtils.getshow();
+            MainActivity.showPlayImage();
+        }else {
+            super.onBackPressed();
+        }
 
     }
 }

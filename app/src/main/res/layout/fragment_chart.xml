@@ -105,13 +105,6 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/dot_style"/>
             </LinearLayout>
-            <ImageView
-                android:id="@+id/fragment_chart_iv"
-                android:src="@drawable/radio_icon"
-                android:layout_gravity="bottom|right"
-                android:layout_margin="20dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
         </FrameLayout>
 
     </LinearLayout>

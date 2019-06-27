@@ -7,17 +7,31 @@
     android:layout_height="match_parent"
 
     tools:context=".activities.MainActivity">
-    <!--<FrameLayout android:id="@+id/activity_main_radio_fl"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <FrameLayout android:id="@+id/activity_main_radio_fl"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!--</FrameLayout>-->
+    </FrameLayout>
 
-    <net.lzzy.myradio.activities.StaticViewPager
-        android:id="@+id/pager"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+        <net.lzzy.myradio.activities.StaticViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/fragment_chart_iv"
+            android:src="@drawable/radio_icon"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="20dp"
+            android:layout_width="50dp"
+            android:visibility="gone"
+            android:layout_height="50dp" />
+    </FrameLayout>
+
     <LinearLayout android:orientation="horizontal"
         android:background="#EBE77C4B"
         android:layout_width="match_parent"
