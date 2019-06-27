@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -18,12 +19,15 @@ import androidx.annotation.Nullable;
 import com.squareup.picasso.Picasso;
 
 import net.lzzy.myradio.R;
+import net.lzzy.myradio.activities.CircleImageView;
+import net.lzzy.myradio.activities.MainActivity;
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.myradio.models.Broadcaster;
 import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.utils.AppUtils;
 import net.lzzy.myradio.utils.DateTimeUtils;
+import net.lzzy.myradio.utils.ViewUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -43,44 +47,35 @@ import static android.provider.MediaStore.MediaColumns.TITLE;
  * 播放器Fragment
  */
 public class PlayerFragment extends BaseFragment {
-    public static final String QUESTION_RESULT = "questionResult";
-    public static final String RADIO_HINT = "radioHint";
-    public static final String ARG_PLAYLISTS = "ARG_PLAYLISTS";
-    public static final String ARG_URLS = "ARG_URLS";
-    public static final String PLAY_POSITION = "PLAY_POSITION";
-    private List<PlayList> playLists;
-
-    public static final String SSS = "sss";
+    public static final String RADIO_PROGRAMS = "radioPrograms";
+    public static final String TIME = "time";
     public static final String TITLE = "title";
-    public static final String PROGRAM_LISTS = "programLists";
-    public static final String COVER = "cover";
+    public static final String RADIO = "radio";
+    public static final String REGIONS = "regions";
     private IjkMediaPlayer player;
+    private CircleImageView imgRadio;
+    private TextView tvRadio;
     private TextView tvStart;
-    private TextView tvEnd;
     private SeekBar bar;
+    private TextView tvEnd;
     private ImageView imgPrevious;
     private ImageView imgPlay;
     private ImageView imgNext;
-    private List<String> address;
-    private int position;
-    private Radio radioFavorite;
-    private List<String> urls;
-    private String playUrl=null;
-    private List<PlayList> questionResults;
-    private String cover;
-    private String[] urls1;
-    private String titleUrl;
-    private TextView tvTitle;
-    private TextView tvRadioTitle;
-    private String radioTitle;
-    private TextView tvAnchor;
-    private String[] anchor1;
-    private String anchorUrl;
-    private ImageView imageView;
-    private ImageView fan;
-    private static boolean b;
-    private FindFragment.OnFragmentInteractionListener mListener;
-    private OnRemovePlayListener listener;
+    private List<PlayList> radioPrograms;
+    private String[] urls;
+    private String[] urlsTitle;
+    private String[] urlsBroadcaster;
+    private int position=0;
+    private String playUrl;
+    private SeekBarHandler handler = new SeekBarHandler();
+    private LinearLayout layout;
+    private TextView tvRegion;
+    private String title;
+    private Radio radio;
+    private int time;
+    private String broadcaster;
+    private TextView tvBroadcaster;
+
 
 
 //    private String[] urls = {"http://lcache.qingting.fm/cache/20190531/4875/4875_20190531_000000_010000_24_0.aac",
@@ -92,26 +87,18 @@ public class PlayerFragment extends BaseFragment {
      * @param
      * @return GridFragment
      */
-    public static PlayerFragment newInstance(int item, String radioTitle, String cover,List<PlayList> questionResults) {
-        //寄存器（用来暂存数据）
-        Bundle arge = new Bundle();
-        //创建一个GridFragment对象
-        PlayerFragment playerFragment = new PlayerFragment();
-        //往寄存器存数据
-        arge.putParcelableArrayList(QUESTION_RESULT, (ArrayList<? extends Parcelable>) questionResults);
-        arge.putInt(SSS, item);
-        arge.putString(TITLE, radioTitle);
-        arge.putString(COVER, cover);
-        //将储存器保存到当前GridFragment对象
-        playerFragment.setArguments(arge);
-        return playerFragment;
+    public static PlayerFragment newInstance(int time, String title, Radio radio, List<PlayList> radioPrograms){
+        PlayerFragment fragment=new PlayerFragment();
+        Bundle args= new Bundle();
+        args.putInt(TIME,time);
+        args.putString(TITLE,title);
+        args.putParcelable(RADIO,radio);
+        args.putParcelableArrayList(RADIO_PROGRAMS, (ArrayList<? extends Parcelable>) radioPrograms);
+        fragment.setArguments(args);
+        return fragment;
     }
 
-
-    private SeekBarHandler handler = new SeekBarHandler();
-
-
-    private class SeekBarHandler extends Handler {
+    private class SeekBarHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
             if (player != null){
@@ -121,35 +108,88 @@ public class PlayerFragment extends BaseFragment {
             }
         }
     }
-    //销毁
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments()!=null){
-            questionResults=getArguments().getParcelable(QUESTION_RESULT);
-            position = getArguments().getInt(SSS);
-            playLists = getArguments().getParcelableArrayList(PROGRAM_LISTS);
-            radioTitle = getArguments().getString(TITLE);
-            cover = getArguments().getString(COVER);
+            time=getArguments().getInt(TIME);
+            title=getArguments().getString(TITLE);
+            radio=getArguments().getParcelable(RADIO);
+            radioPrograms=getArguments().getParcelableArrayList(RADIO_PROGRAMS);
         }
 
     }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void populate() {
         player = AppUtils.getPlayer();
-        View view = inflater.inflate(R.layout.fragment_music, container, false);
-        initViews(view);
+        intiView();
+        getPrograms();
         configPlayer();
         playMusic();
-        return view;
+
+
     }
     private void setSeekBar(long position){
         bar.setProgress((int) position);
         String pastTime = formatPlayerTime((int) position);
         tvStart.setText(pastTime);
     }
+
+    private void getPrograms() {
+        List<String> programsList=new ArrayList<>();
+        List<String> titleList=new ArrayList<>();
+        List<String> broadcasterList=new ArrayList<>();
+        for (PlayList programs:radioPrograms){
+            String title=programs.getTitle();
+            List<Broadcaster> broadcasters=programs.getBroadcasters();
+            String userName;
+            if (broadcasters.size()>0){
+                for (Broadcaster broadcaster:broadcasters){
+                    userName= "主播:"+"hhhhhhh";
+                    broadcasterList.add(userName);
+                }
+            }else {
+                userName="主播:未知";
+                broadcasterList.add(userName);
+            }
+            titleList.add(title);
+            String startTime=programs.getStartTime();
+            String endTime=programs.getEndTime();
+            int channelId= programs.getChannelId();
+            String programAddress;
+            try {
+                if (DateTimeUtils.isPlayTime(startTime,endTime)){
+                    programAddress=ApiConstants.getPlayimjUrl(channelId);
+                    programsList.add(programAddress);
+                }else{
+                    programAddress= ApiConstants.getRadioProgramsPlay(channelId,startTime,endTime);
+                    programsList.add(programAddress);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        tvRegion.setText(radio.getTitle());
+        Picasso.get().load(radio.getCover())
+                .into(imgRadio);
+        urlsTitle=get(titleList.size(),titleList);
+        title=urlsTitle[time];
+        tvRadio.setText(title);
+        urlsBroadcaster=get(broadcasterList.size(),broadcasterList);
+        broadcaster=urlsBroadcaster[time];
+        tvBroadcaster.setText(broadcaster);
+        urls=get(programsList.size(),programsList);
+        playUrl=urls[time];
+
+    }
+    private String[] get(int size, List<String> title) {
+        String[] s = new String[size];
+        s = title.toArray(s);
+        return s;
+    }
+
+
+
     private void configPlayer() {
         imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +208,7 @@ public class PlayerFragment extends BaseFragment {
         imgPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchMusic(true);
+                switchMusic(false);
             }
         });
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -190,22 +230,30 @@ public class PlayerFragment extends BaseFragment {
             }
         });
     }
-    private String formatPlayerTime(int max) {
-        max /= 1000;
-        int min = max / 60;
-        int seconds = max % 60;
-        return String.format(Locale.CHINA, "%d:%02d", min, seconds);
-    }
-    private boolean playOrPause() {
-        if (player.isPlaying()) {
-            player.pause();
-            return true;
+    private void switchMusic(boolean backward) {
+        if (backward) {
+            if (position > 0) {
+                position--;
+            } else {
+                Toast.makeText(getContext(), "no previous music!", Toast.LENGTH_SHORT).show();
+                return;
+            }
         } else {
-            player.start();
-            return false;
+            if (position < urls.length - 1) {
+                position++;
+            } else {
+                Toast.makeText(getContext(), "it's already the last music", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
-    }
+        playUrl = urls[position];
+        playMusic();
+        title=urlsTitle[position];
+        tvRadio.setText(title);
+        broadcaster=urlsBroadcaster[position];
+        tvBroadcaster.setText(broadcaster);
 
+    }
     private void playMusic() {
         try {
             player.reset();
@@ -234,173 +282,53 @@ public class PlayerFragment extends BaseFragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-    }
-    private void switchMusic(boolean backward) {
-        if (backward) {
-            if (position > 0) {
-                position--;
-            } else {
-                Toast.makeText(getContext(), "no previous music!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        } else {
-            if (position < urls.size() - 1) {
-                position++;
-            } else {
-                Toast.makeText(getContext(), "这已经是最后的音乐", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        playUrl = urls1[position];
-
-
-        playMusic();
-        titleUrl = urls1[position];
-        anchorUrl = anchor1[position];
-        tvTitle.setText(titleUrl);
-        tvAnchor.setText(anchorUrl);
     }
 
-    public static void exit(boolean back) {
-        if (back) {
-            b = true;
-        } else {
-            b = false;
-        }
-    }
-
-    private void initViews(View view) {
-
-        tvStart = view.findViewById(R.id.tv_start);
-        tvEnd = view.findViewById(R.id.tv_end);
-        bar = view.findViewById(R.id.bar);
-        imgPrevious = view.findViewById(R.id.img_previous);
-        imgPlay = view.findViewById(R.id.img_play);
-        imgNext = view.findViewById(R.id.img_next);
-    }
-
-    @Override
-    protected void populate() {
-        player = AppUtils.getPlayer();
-        initViews();
-        getData();
-        configPlayer();
-        playMusic();
-
-
-    }
-
-    private void initViews() {
-
-        tvStart = find(R.id.tv_start);
-        tvEnd = find(R.id.tv_end);
-        bar = find(R.id.bar);
-        tvRadioTitle = find(R.id.fragment_play_title);
-        tvRadioTitle.setText(radioTitle);
-        fan = find(R.id.fragment_play_fan);
-        fan.setOnClickListener(view -> {
-            if (b) {
-                listener.onRemovePlay();
-                FindFragment.showDialog();
-            } else {
-                listener.onRemovePlay();
-                FindFragment.hideDialog();
+    private void intiView() {
+        layout = find(R.id.fragment_play_layout);
+        tvRegion = find(R.id.fragment_play_tv_region);
+        imgRadio = find(R.id.fragment_play_img_radio);
+        tvRadio = find(R.id.fragment_play_tv_radio);
+        tvBroadcaster = find(R.id.fragment_play_tv_broadcaster);
+        tvStart = find(R.id.fragment_play_tv_start);
+        bar = find(R.id.fragment_play_bar);
+        tvEnd = find(R.id.fragment_play_tv_end);
+        imgPrevious = find(R.id.fragment_play_img_previous);
+        imgPlay = find(R.id.fragment_play_img_play);
+        imgNext = find(R.id.fragment_play_img_next);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ViewUtils.isShow()) {
+                    ViewUtils.getshow();
+                }
+                MainActivity.showPlayImage();
+                MainActivity.hinePlay();
             }
         });
-        imgPrevious = find(R.id.img_previous);
-        imgPlay = find(R.id.img_play);
-        imgNext = find(R.id.img_next);
-        tvTitle = find(R.id.fragment_play_tv_title);
-        tvAnchor = find(R.id.fragment_play_tv_zhobo);
-        imageView = find(R.id.fragment_play_iv);
-        if (cover != null) {
-            Picasso.get().load(cover).into(imageView);
+
+    }
+
+    private String formatPlayerTime(int max) {
+        max /= 1000;
+        int min = max / 60;
+        int seconds = max % 60;
+        return String.format(Locale.CHINA, "%d:%02d", min, seconds);
+    }
+
+    private boolean playOrPause() {
+        if (player.isPlaying()) {
+            player.pause();
+            return true;
         } else {
-            Picasso.get().load("https://sss.qingting.fm/neo/default_album.png").into(imageView);
+            player.start();
+            return false;
         }
     }
-
-    private void getData() {
-        address=new ArrayList<>();
-        List<String> title = new ArrayList<>();
-        List<String> anchor= new ArrayList<>();
-        List<String> aa=new ArrayList<>();
-        for (PlayList playList : playLists){
-            String titl= playList.getTitle();
-            String anchors;
-            List<Broadcaster> broadcasters = playList.getBroadcasters();
-            if (broadcasters.size()>0){
-                for (  Broadcaster broadcaster :broadcasters){
-                    anchors="主播"+broadcaster.getUsername();
-                    anchor.add(anchors);
-                    
-                }
-            }else {
-                anchors="主播：未知";
-                anchor.add(anchors);
-
-            }
-            title.add(titl);
-            String startTime=playList.getStartTime();
-            String endTime = playList.getEndTime();
-            int channelId=playList.getChannelId();
-            String playAddress;
-            try {
-                if (DateTimeUtils.isPlayTime(startTime,endTime)){
-                    playAddress=ApiConstants.getPlayimjUrl(channelId);
-                    aa.add(playAddress);
-                }else {
-                    playAddress= ApiConstants.getDemand(channelId,startTime,endTime);
-                    aa.add(playAddress);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        urls1 = get(title.size(), title);
-        urls = Arrays.asList(get(address.size(), address));
-        anchor1 = get(anchor.size(), anchor);
-        playUrl = urls.get(position);
-        titleUrl = urls1[position];
-        anchorUrl = anchor1[position];
-        tvTitle.setText(titleUrl);
-        tvAnchor.setText(anchorUrl);
-    }
-
-    private String[] get(int size, List<String> title) {
-        String[] s = new String[size];
-        s = title.toArray(s);
-        return s;
-    }
-
-        private String getNewTime(String g) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(g);
-            String dateString = simpleDateFormat.format(new Date());
-            return dateString;
-        }
-
-
-    private String getPathTime(String g, String newTime) {
-        SimpleDateFormat formatter1 = new SimpleDateFormat(g);
-        String a = null;
-        try {
-            Date date1 = formatter1.parse(newTime);
-            a = formatter1.format(date1).replace(":", "");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return a;
-    }
-
-
-
-
-
 
 
     @Override
-    protected int getLayoutRes() {
+    public int getLayoutRes() {
         return R.layout.fragment_music;
     }
 
@@ -408,12 +336,12 @@ public class PlayerFragment extends BaseFragment {
     public void search(String kw) {
 
     }
-    public interface OnRemovePlayListener {
-        /**
-         * 点击节目跳转
-         *
-         * @param
-         */
-        void onRemovePlay();
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
+
+
 }

@@ -1,5 +1,8 @@
 package net.lzzy.myradio.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import net.lzzy.myradio.constants.ApiConstants;
 import net.lzzy.sqllib.JsonConverter;
 import net.lzzy.sqllib.Jsonable;
@@ -17,7 +20,7 @@ import java.util.List;
  * @date 2019/5/27
  * Description: 电台
  */
-public class Radio implements Jsonable {
+public class Radio implements Jsonable, Parcelable {
 
     private int contentId;
     private String contentType;
@@ -30,6 +33,30 @@ public class Radio implements Jsonable {
     private String updateTime;
     private List<RadioCategory> categories;
     public Radio(){}
+
+    protected Radio(Parcel in) {
+        contentId = in.readInt();
+        contentType = in.readString();
+        cover = in.readString();
+        title = in.readString();
+        description = in.readString();
+        audienceCount = in.readInt();
+        liveShowId = in.readString();
+        updateTime = in.readString();
+        categories = in.createTypedArrayList(RadioCategory.CREATOR);
+    }
+
+    public static final Creator<Radio> CREATOR = new Creator<Radio>() {
+        @Override
+        public Radio createFromParcel(Parcel in) {
+            return new Radio(in);
+        }
+
+        @Override
+        public Radio[] newArray(int size) {
+            return new Radio[size];
+        }
+    };
 
     public int  getContentId() {
         return contentId;
@@ -168,4 +195,21 @@ public class Radio implements Jsonable {
         }
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(contentId);
+        dest.writeString(contentType);
+        dest.writeString(cover);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeInt(audienceCount);
+        dest.writeString(liveShowId);
+        dest.writeString(updateTime);
+        dest.writeTypedList(categories);
+    }
 }

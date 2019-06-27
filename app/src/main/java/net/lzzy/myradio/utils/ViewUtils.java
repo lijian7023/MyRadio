@@ -17,6 +17,7 @@ import androidx.appcompat.widget.SearchView;
 import net.lzzy.myradio.R;
 import net.lzzy.myradio.activities.MainActivity;
 import net.lzzy.myradio.fragments.PlayFragment;
+import net.lzzy.myradio.fragments.PlayerFragment;
 import net.lzzy.myradio.models.Broadcaster;
 import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
@@ -171,38 +172,46 @@ public  class ViewUtils {
         dialog.setContentView(view);
         dialog.show();
 
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                new PlayFragment();
-//                try {
-//                    if (DateTimeUtils.isPlayTime(radioPrograms.get(position).getStartTime())){
-//                        pos=radioPrograms.get(position).getId();
-//                        if (context instanceof MainActivity){
-//                            UserCookies.getInstance().updateRadioProgramsName(String.valueOf(radioPrograms.get(position).getId()),radioPrograms.get(position).getTitle());
-//                            UserCookies.getInstance().updateRadioPrograms(String.valueOf(radioPrograms.get(position).getId()),new Date());
-//                            PlayFragment fragment=PlayFragment.newInstance(position,radioPrograms.get(position).getTitle(),radios,radioPrograms);
-//                            ((MainActivity) context).showPlayFragment(fragment);
-//                            dialog.hide();
-//                            adapter.notifyDataSetChanged();
-//                        }
-//                    }else {
-//                        Toast.makeText(view.getContext(), "还未到播放时间", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//
-//            }
-//        });
-//        dialog.setContentView(view);
-//        dialog.show();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    if (DateTimeUtils.isStartTime(radioPrograms.get(position).getStartTime())){
+                        if (context instanceof MainActivity){
+                            UserCookies.getInstance().updateRadioProgramsName(String.valueOf(radioPrograms.get(position).getId()),radioPrograms.get(position).getTitle());
+                            UserCookies.getInstance().updateRadioPrograms(String.valueOf(radioPrograms.get(position).getId()),new Date());
+                            PlayerFragment fragment=PlayerFragment.newInstance(position,radioPrograms.get(position).getTitle(),AppUtils.getRadio(),radioPrograms);
+                            ((MainActivity) context).showPlayFragment(fragment);
+                            dialog.hide();
+                            adapter.notifyDataSetChanged();
+                        }
+                    }else {
+                        Toast.makeText(view.getContext(), "还未到播放时间", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }
+        });
+        dialog.setContentView(view);
+        dialog.show();
     }
 
+    public static void getshow(){
+        dialog.show();
+    }
 
+    public static boolean isShow(){
+        try {
+            return dialog.isShowing();
+        }catch (Exception e){
+            return false;
+        }
+    }
     public static void updateRadioProgramsAdapter(List<PlayList> radioPrograms1) {
         if (dialog != null && dialog.isShowing() && adapter != null) {
             radioPrograms.clear();

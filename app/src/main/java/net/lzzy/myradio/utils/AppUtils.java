@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.core.util.Pair;
 
+import net.lzzy.myradio.models.Radio;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -51,6 +53,15 @@ public class AppUtils extends Application {
     private static WeakReference<Context> wContext;
     private static List<Activity> activities = new LinkedList<>();
     private static String runningActivity;
+    private static Radio radio;
+
+    public static Radio getRadio() {
+        return radio;
+    }
+
+    public static void setRadio(Radio radio) {
+        AppUtils.radio = radio;
+    }
 
     private static IjkMediaPlayer player;
 

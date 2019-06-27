@@ -30,6 +30,7 @@ import net.lzzy.myradio.models.PlayList;
 import net.lzzy.myradio.models.Radio;
 import net.lzzy.myradio.models.RadioCategory;
 import net.lzzy.myradio.models.Region;
+import net.lzzy.myradio.models.UserCookies;
 import net.lzzy.myradio.network.AnalysisJsonService;
 import net.lzzy.myradio.network.ApiService;
 import net.lzzy.myradio.utils.AbstractStaticHandler;
@@ -48,6 +49,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -174,8 +176,11 @@ public static void hideDialog(){dialog.hide();}
                     public void onClick(DialogInterface dialog, int which) {
                         page=1;
                         String regionText = items[which];
-                        for (Region region:regions) {
+                       for (Region region:regions) {
                             if (region.getTitle().equals(regionText)) {
+                                UserCookies.getInstance().updateReadRegionsCount(String.valueOf(region.getId()),new Date());
+                                UserCookies.getInstance().updateReadRegionsName(String.valueOf(region.getId()),regionText);
+
                                 tvRegion.setText(regionText);
                                 tvRegion.setTag(region.getId());
                                 AppUtils.getExecutor().execute(() -> {
@@ -305,6 +310,9 @@ public static void hideDialog(){dialog.hide();}
         });
         //region 点击电台进入节目列表
         gv.setOnItemClickListener((parent, view, position, id) -> {
+            AppUtils.setRadio(radios.get(position));
+            UserCookies.getInstance().updateRadioName(String.valueOf(radios.get(position).getContentId()),radios.get(position).getTitle());
+            UserCookies.getInstance().updateRadio(String.valueOf(radios.get(position).getContentId()),new Date());
             ViewUtils.showPrograms(getContext(),tvRegion.getText().toString()
                     ,radios.get(position).getTitle(),new ArrayList<>());
             new BaseAsyncTack(){

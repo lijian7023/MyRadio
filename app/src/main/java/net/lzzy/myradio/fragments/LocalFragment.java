@@ -120,6 +120,7 @@ public class LocalFragment extends BaseFragment {
         gv.setAdapter(adapter);
         //点击进入节目列表
         gv.setOnItemClickListener((parent, view, position, id) -> {
+            AppUtils.setRadio(radios.get(position));
             ViewUtils.showPrograms(getContext(),"返回"
                     ,radios.get(position).getTitle(),new ArrayList<>());
             new BaseAsyncTack(){
